@@ -39,19 +39,14 @@ function aMap(@f){ return function(@xs) {
 * aConcatMap : (a -> Array b) -> Array a -> Array b
 */
 function aConcatMap(@f) { return function(@xs) {
-	var tmp = [];
-	for (var x in xs) {
-		var xv = @x;
-		tmp += f(xv);
-	}
-	return @tmp;
+	return arrayFoldLeft(xs, function(@acc, @x){acc += f(x); return @acc;}, []);
 };}
 
 /**
 * aConcat : Array (Array a) -> Array a
 */
 function aConcat(@xss) {
-	return arrayFoldRight(xss, arrayConcat, []);
+	return arrayFlatten(xss, 1);//arrayFoldRight(xss, arrayConcat, []);
 }
 
 /**
