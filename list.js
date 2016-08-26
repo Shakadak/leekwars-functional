@@ -1,0 +1,136 @@
+// ---   lFoldL : (b -> a -> b) -> b -> List a -> b
+function lFoldL(@f){ return function(@b) { return function(@as) {
+	var acc = @b, x, xs = @as;
+	while (xs !== null) {
+		xs(x, xs);
+		acc = f(acc)(x);
+	}
+	return @acc;
+};};}
+
+// ---   lFoldR : (a -> b -> b) -> b -> List a -> b
+function lFoldR(@f) { return function(@b) { return function(@as) {
+	return ulFoldR(f, b, as);
+};};}
+
+function ulFoldR(@f, @b, @as) {
+	if (as === null) { return @b; }
+	else             {
+		var x, xs;
+		as(x, xs);
+		return f(x)(ulFoldR(f, b, xs));
+	}
+}
+
+function ulFoldRu(@f, @b, @as) {
+	if (as === null) { return @b; }
+	else             {
+		var x_, xs_;
+		as(x_, xs_);
+		return f(x_, ulFoldRu(f, b, xs_));
+	}
+}
+
+// ---   lMap : (a -> b) -> List a -> List b
+function lMap(@f) { return function (@xs) {
+	return ulMap(f, xs);
+};}
+
+function ulMap(@f, @xs) {
+	if (xs === null) { return @xs; }
+	else             {
+		var x_, xs_;
+		xs(x_, xs_);
+		return ulCons(f(x_), ulMap(f, xs_));
+	}
+}
+
+// ---   lConcat : List (List a) -> List a
+function lConcatB(@xss) {
+	return ulFoldRu(ulAppend, null, xss);
+}
+
+// ---   lAppend : List a -> List a -> List a
+function lAppend(@xs) { return function(@ys) {
+		return ulAppend(xs, ys);
+};}
+
+function ulAppend(@xs, @ys) {
+	/*if (xs === null) {return @ys;}
+	else             {
+		var x_, xs_;
+		xs(x_, xs_);
+		return ulCons(x_, ulAppend(xs_, ys));
+	}*/
+	return ulFoldRu(ulCons, ys, xs);
+}
+
+// ---   lFilter : (a -> Bool) -> List a -> List a
+function lFilter(@p) { return function (@xs) {
+	return ulFilter(p, xs);
+};}
+
+function ulFilter(@p, @xs){
+	if (xs === null) { return @xs; }
+	else             {
+		var x_, xs_;
+		xs(x_, xs_);
+		if (p(x_)) { return ulCons(x_, ulFilter(p, xs_)); }
+		else      { return ulFilter(p, xs_); }
+	}}
+
+// ---   lHead : List a -> a
+function lHead(@l) {
+	if (l === null) { debugE("lHead: Empty list");}
+	var x;
+	l(x, null);
+	return @x;
+}
+
+// ---   lTail : List a -> List a
+function lTail(@l) {
+	if (l === null) { debugE("lTail: Empty list");}
+	var xs;
+	l(null, xs);
+	return @xs;
+}
+
+// ---   lSingleton : a -> List a
+function lSingleton(@x) {return lCons(x)(null);}
+
+function augment(@f) { return function(@xs) {
+	var xs_ = @xs;
+	return f(lCons)(xs_);
+};}
+function build(@f) { return f(lCons)(null);}
+
+// ---   lCons : a -> List a -> List a
+function lCons(@x){
+	var x_ = @x;
+	return function(@xs){
+		var xs_ = @xs;
+		return function(@_x, @_xs) {
+	_x = @x_; _xs = @xs_;
+};};}
+
+// ---   ulCons : (a, List a) -> List a
+function ulCons(@x, @xs) {
+	var x_ = @x, xs_ = @xs;
+	return function(@_x, @_xs) { _x = @x_; _xs = @xs_; };
+}
+
+// ---   lFromArray : Array a -> List a
+function lFromArray(@xs){
+	return arrayFoldRight(xs, ulCons, null);
+}
+
+// ---   lToArray : List a -> Array a
+function lToArray(@l){
+	var x, xs = @l;
+	var ret = [];
+	while (xs !== null) {
+		xs(x, xs);
+		push(ret, x);
+	}
+	return @ret;
+}
