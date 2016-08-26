@@ -63,7 +63,7 @@ function ulMap(@f, @xs) {
 /**
 * lConcat : List (List a) -> List a
 */
-function lConcatB(@xss) {
+function lConcat(@xss) {
 	return ulFoldRu(ulAppend, null, xss);
 }
 
