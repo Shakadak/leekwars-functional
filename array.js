@@ -37,7 +37,7 @@ function aConcatMap(@f) { return function(@xs) {
 	var tmp = [];
 	for (var x in xs) {
 		var xv = @x;
-		pushAll(tmp, f(xv));
+		tmp += f(xv);
 	}
 	return @tmp;
 };}
