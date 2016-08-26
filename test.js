@@ -77,7 +77,7 @@ debug("z: " + lToArray(z));
 
 
 
-debug("--- Filter tests ---");
+debug("\n--- Filter tests ---");
 debug("z: " + lToArray(z));
 
 startOp();
@@ -91,7 +91,7 @@ var fis1 = aFilter(function(g){return g != 1;})(ns);
 stopOp("var fis1 = aFilter((!=1))(ns);");
 debug(fis1);
 
-debug("--- Map tests ---");
+debug("\n--- Map tests ---");
 debug("z: " + lToArray(z));
 
 startOp();
@@ -120,7 +120,7 @@ debug(lToArray(z));
 
 debug(lToArray(aFoldR(lCons)(null)(ns)));
 
-debug("--- Append tests ---");
+debug("\n--- Append tests ---");
 debug("z: " + lToArray(z));
 startOp();
 var a1 = null;
@@ -159,43 +159,24 @@ var a5 = aAppend(xb)(ns);
 stopOp("var a5 = aAppend(xb)(ns); ...");
 debug("cc5: " + a5);
 
-debug("--- Append tests ---");
-debug("z: " + lToArray(z));
+debug("\n--- Concat tests ---");
+var nss = aMap(const(ns))(xb);
+debug("nss: " + nss);
+var DDltoa = compose(lToArray)(lMap(lToArray));
+var zss = lFromArray(aMap(lFromArray)(nss));
+debug("zss: " + DDltoa(zss));
+
 startOp();
-var cc1 = null;
-cc1 = lAppend(cc1)(ux);
-cc1 = lAppend(cc1)(z);
-cc1 = lAppend(cc1)(z);
-cc1 = lAppend(cc1)(z);
-stopOp("var cc1 = lAppend(ux)(z);");
+var cc1 = lConcat(zss);
+stopOp("var cc1 = lConcat(zss);");
 debug("cc1: " + lToArray(cc1));
 startOp();
-var cc2 = [];
-pushAll(cc2, xb);
-pushAll(cc2, ns);
-pushAll(cc2, ns);
-pushAll(cc2, ns);
-stopOp("var cc2 = []; pushAll(cc2, xb); pushAll(cc2, ns);");
+var cc2 = arrayFlatten(nss);
+stopOp("var cc2 = arrayFlatten(nss);");
 debug("cc2: " + cc2);
 startOp();
-var cc3 = [];
-cc3 = cc3 + xb;
-cc3 = cc3 + ns;
-cc3 = cc3 + ns;
-cc3 = cc3 + ns;
-stopOp("var cc3 = xb + ns;");
-debug("cc3: " + cc3);
-startOp();
-var cc4 = [];
-cc4 = arrayConcat(cc4, xb);
-cc4 = arrayConcat(cc4, ns);
-cc4 = arrayConcat(cc4, ns);
-cc4 = arrayConcat(cc4, ns);
-stopOp("var cc4 = arrayConcat(xb, ns);");
-debug("cc4: " + cc4);
-startOp();
-var cc5 = aAppend(xb)(ns);
-stopOp("var cc5 = aAppend(xb)(ns);");
+var cc5 = aConcat(nss);
+stopOp("var cc5 = aConcat(nss);");
 debug("cc5: " + cc5);
 
 debug("z: " + lToArray(z));
