@@ -16,6 +16,7 @@ function const(@a) { return @function (@b) { return @a; };}
 
 /**
 * flip : (a -> b -> c) -> b -> a -> c
+*/
 function flip(@f) { return function(@b) {return function(@a) {
   return f(a)(b);};};}
 

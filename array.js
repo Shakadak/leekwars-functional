@@ -6,12 +6,6 @@ include("bool");
 * aFoldL : (b -> a -> b) -> b -> Array a -> b
 */
 function aFoldL(@f) { return function(@b) { return function(@as) {
-	/*var ret = b;
-	for (var a in as) {
-		//var av = @a;
-		ret = f(ret)(a);
-	}
-	return @ret;*/
 	return arrayFoldLeft(as, uncurry2(f), b);
 };};};
 
@@ -64,8 +58,6 @@ function aConcat(@xss) {
 * aAppend : Array a -> Array a -> Array a
 */
 function aAppend(@xs) {return function(@ys) {
-	//return arrayFoldLeft(ys, function(@acc, @y){push(acc, y);return @acc;}, xs);
-	//return arrayFoldRight(xs, function(@x, @acc){unshift(acc, x);return @acc;}, ys);
 	return @(xs + ys);
 };}
 
