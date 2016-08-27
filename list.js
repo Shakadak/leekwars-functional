@@ -98,7 +98,27 @@ function ulFilter(@p, @xs){
 		xs(x_, xs_);
 		if (p(x_)) { return ulCons(x_, ulFilter(p, xs_)); }
 		else      { return ulFilter(p, xs_); }
-	}}
+	}
+}
+
+/**
+* lIter : (a -> ()) -> List a -> ()
+*/
+function lIter(@f) { return function(@xs) {
+	ulIter(f, xs);
+};}
+
+/**
+* ulIter : ((a -> ()), List a) -> ()
+*/
+function ulIter(@f, @xs) {
+	if (xs !== null) {
+		var x_, xs_;
+		xs(x_, xs_);
+		f(x_);
+		ulIter(f, xs_);
+	}
+}
 
 /**
 * lHead : List a -> a
@@ -153,6 +173,14 @@ function lCons(@x){
 * ulCons : (a, List a) -> List a
 */
 function ulCons(@x, @xs) {
+	var x_ = @x, xs_ = @xs;
+	return function(@_x, @_xs) { _x = @x_; _xs = @xs_; };
+}
+
+/**
+* ulSnoc : (List a, a) -> List a
+*/
+function ulSnoc(@xs, @x) {
 	var x_ = @x, xs_ = @xs;
 	return function(@_x, @_xs) { _x = @x_; _xs = @xs_; };
 }
