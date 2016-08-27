@@ -34,12 +34,7 @@ function aFoldRu(@f) { return function(@b) { return function(@as) {
 * aFilter : (a -> Bool) -> Array a -> Array a
 */
 function aFilter(@p) { return function(@xs) {
-    var tmp = [];
-    for (var x in xs) {
-		var xv = @x;
-        if (p(x)) {push(tmp, x); }
-    }
-    return @tmp;
+	return arrayFoldLeft(xs, function(@acc, @x){if (p(x)){push(acc, x);} return @acc;}, []);
 };};
 
 /**
@@ -67,7 +62,10 @@ function aConcat(@xss) {
 * aAppend : Array a -> Array a -> Array a
 */
 function aAppend(@xs) {return function(@ys) {
-	return @(xs + ys);
+	var ret = [];
+	ret += xs;
+	ret += ys;
+	return @ret;
 };}
 
 /**
