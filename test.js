@@ -3,8 +3,32 @@ include("array");
 include("math");
 include("list");
 
+var array = [];
 startOp();
-
+unshift(array, 3);
+stopOp("unshift(array, 3);");
+debug("array: " + array);
+startOp();
+unshift(array, 2);
+stopOp("unshift(array, 2);");
+debug("array: " + array);
+startOp();
+unshift(array, 1);
+stopOp("unshift(array, 1);");
+debug("array: " + array);
+array = [];
+startOp();
+push(array, 1);
+stopOp("push(array, 1);");
+debug("array: " + array);
+startOp();
+push(array, 2);
+stopOp("push(array, 2);");
+debug("array: " + array);
+startOp();
+push(array, 3);
+stopOp("push(array, 3);");
+debug("array: " + array);
 
 var v1 = 1, v2 = 2, v3 = 3;
 
@@ -157,7 +181,11 @@ debug("a4: " + a4);
 startOp();
 var a5 = aAppend(xb)(ns);
 stopOp("var a5 = aAppend(xb)(ns); ...");
-debug("cc5: " + a5);
+debug("a5: " + a5);
+startOp();
+var a6 = aAppend(ns)(ns);
+stopOp("var a6 = aAppend(ns)(ns); ...");
+debug("a6: " + a6);
 
 debug("\n--- Concat tests ---");
 var nss = aMap(const(ns))(xb);
