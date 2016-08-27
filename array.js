@@ -104,7 +104,7 @@ function aRelativeComplement(@xs) { return function(@ys) {
 /**
 * aIter : (a -> ()) -> Array a -> ()
 */
-function aIter(@f) {return function(@xs) {
+function aIter(@f) { return function(@xs) {
 	arrayFoldLeft(xs, function(@_, @x){f(x);}, null);
 };}
 
