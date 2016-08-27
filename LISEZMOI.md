@@ -43,7 +43,7 @@ var ret = aFoldRu(add)(0)(xs);
 [/code]
 ```
 
-Importantes choses a comprendre savec foldLeft et foldRight:
+Importantes choses à comprendre avec foldLeft et foldRight:
 * L'accumulateur (second argument) est généralement un élément identité, comme le 0 avec l'addition (1 + 0 = 1). Cela dit, ca n'est pas nécessaire du tout.
 * La fonction de consommation recoit et l'accumulateur, et un élément du tableau en argument. Dans le cas de foldLeft, l'accumulateur est à *gauche* et dans le cas de foldRight, l'accumulateur est à *droite*. En cas de doute, jetez un coups d'oeil au type. `b` est l'accumulateur, `a` est le consommé. Observer le typage de aFoldLu et aFoldRu devrait être plus simple si vous n'avez pas l'habitude de cette notation.
 
@@ -59,7 +59,7 @@ var ret = aApply(fs)(xs);
 
 ```
 [code]
-var prepend123 = append([1, 2, 3]); // Equivalent to function(@x) { return [1, 2, 3] + x; }
+var prepend123 = append([1, 2, 3]); // Equivalent à function(@x) { return [1, 2, 3] + x; }
 var xs = prepend123([2, 3, 4]);
 var ys = prepend123([]);
 // xs = [1, 2, 3, 2, 3, 4]
