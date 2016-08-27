@@ -35,9 +35,9 @@ function ulFoldR(@f, @b, @as) {
 function ulFoldRu(@f, @b, @as) {
 	if (as === null) { return @b; }
 	else             {
-		var x_, xs_;
-		as(x_, xs_);
-		return f(x_, ulFoldRu(f, b, xs_));
+		var _x, _xs;
+		as(_x, _xs);
+		return f(_x, ulFoldRu(f, b, _xs));
 	}
 }
 
@@ -54,9 +54,9 @@ function lMap(@f) { return function (@xs) {
 function ulMap(@f, @xs) {
 	if (xs === null) { return @xs; }
 	else             {
-		var x_, xs_;
-		xs(x_, xs_);
-		return ulCons(f(x_), ulMap(f, xs_));
+		var _x, _xs;
+		xs(_x, _xs);
+		return ulCons(f(_x), ulMap(f, _xs));
 	}
 }
 
@@ -94,10 +94,10 @@ function lFilter(@p) { return function (@xs) {
 function ulFilter(@p, @xs){
 	if (xs === null) { return @xs; }
 	else             {
-		var x_, xs_;
-		xs(x_, xs_);
-		if (p(x_)) { return ulCons(x_, ulFilter(p, xs_)); }
-		else      { return ulFilter(p, xs_); }
+		var _x, _xs;
+		xs(_x, _xs);
+		if (p(_x)) { return ulCons(_x, ulFilter(p, _xs)); }
+		else      { return ulFilter(p, _xs); }
 	}
 }
 
@@ -112,12 +112,6 @@ function lIter(@f) { return function(@xs) {
 * ulIter : ((a -> ()), List a) -> ()
 */
 function ulIter(@f, @xs) {
-	/*if (xs !== null) {
-		var x_, xs_;
-		xs(x_, xs_);
-		f(x_);
-		ulIter(f, xs_);
-	}*/
 	var _x, _xs = xs;
 	while (_xs !== null) {
 		_xs(_x, _xs);
@@ -154,8 +148,8 @@ function lSingleton(@x) {return lCons(x)(null);}
 * augment : ((a -> b -> b) -> b -> b) -> List a -> List a
 */
 function augment(@f) { return function(@xs) {
-	var xs_ = @xs;
-	return f(lCons)(xs_);
+	var _xs = @xs;
+	return f(lCons)(_xs);
 };}
 
 /**
@@ -167,27 +161,27 @@ function build(@f) { return f(lCons)(null);}
 * lCons : a -> List a -> List a
 */
 function lCons(@x){
-	var x_ = @x;
+	var _x = @x;
 	return function(@xs){
-		var xs_ = @xs;
-		return function(@_x, @_xs) {
-	_x = @x_; _xs = @xs_;
+		var _xs = @xs;
+		return function(@x_, @xs_) {
+	x_ = @_x; xs_ = @_xs;
 };};}
 
 /**
 * ulCons : (a, List a) -> List a
 */
 function ulCons(@x, @xs) {
-	var x_ = @x, xs_ = @xs;
-	return function(@_x, @_xs) { _x = @x_; _xs = @xs_; };
+	var _x = @x, _xs = @xs;
+	return function(@x_, @xs_) { x_ = @_x; xs_ = @_xs; };
 }
 
 /**
 * ulSnoc : (List a, a) -> List a
 */
 function ulSnoc(@xs, @x) {
-	var x_ = @x, xs_ = @xs;
-	return function(@_x, @_xs) { _x = @x_; _xs = @xs_; };
+	var _x = @x, _xs = @xs;
+	return function(@x_, @xs_) { x_ = @_x; xs_ = @_xs; };
 }
 
 /**
