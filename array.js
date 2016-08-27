@@ -10,10 +10,24 @@ function aFoldL(@f) { return function(@b) { return function(@as) {
 };};};
 
 /**
+* aFoldLu : ((b, a) -> b) -> b -> Array a -> b
+*/
+function aFoldL(@f) { return function(@b) { return function(@as) {
+	return arrayFoldLeft(as, f, b);
+};};};
+
+/**
 * aFoldR : (a -> b -> b) -> b -> Array a -> b
 */
 function aFoldR(@f) { return function(@b) { return function(@as) {
 	return arrayFoldRight(as, uncurry2(f), b);
+};};}
+
+/**
+* aFoldR : ((a, b) -> b) -> b -> Array a -> b
+*/
+function aFoldR(@f) { return function(@b) { return function(@as) {
+	return arrayFoldRight(as, f, b);
 };};}
 
 /**
@@ -46,7 +60,7 @@ function aConcatMap(@f) { return function(@xs) {
 * aConcat : Array (Array a) -> Array a
 */
 function aConcat(@xss) {
-	return arrayFlatten(xss, 1);//arrayFoldRight(xss, arrayConcat, []);
+	return arrayFlatten(xss, 1);
 }
 
 /**
