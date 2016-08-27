@@ -1,9 +1,9 @@
 # leekwars-functional
 list and array functions respectively implemented and reimplemented for currying and performance.
 
-leekwars.com
+[leekwars](leekwars.com)
 
-# Pourquoi
+# Why
 
 I originally wanted my array functions to be curryfied, as I like to work with partial application ready at a go. For some reason, I did not think of naming them differently, and I did not think of just calling them inside the curryfied function. So I redid them with a `for` loop, although only `arrayMap` and `arrayFilter`, I did not have much use for the others at the time. Plus they seem to have a reputation of being slower than `for in` loops. I do not remember much if that is really their reputation, but they are slower for sure. So I decided to redo most of them and more.
 
@@ -43,8 +43,8 @@ var ret = aFoldRu(add)(0)(xs);
 ```
 
 Important things to understand with foldLeft and foldRight:
-* The accumulator (second argument) is generally an identity element, like 0 in the case of addition (0 + 1 = 1). Though this is not necessary in any way.
-* The consuming function receive the both the accumulator and an element of the array. In the case of foldLeft, the accumulator is on the *left* and in the case of foldRight, the accumulator is on the *right*. In case of doubt, look at the type. `b` is the accumulator, `a` is the consumed. Looking at the type signatures of aFoldRu and aFoldLu may be easier if you are not used to the notation.
+* The accumulator (second argument) is generally an identity element, like 0 in the case of addition (1 + 0 = 1). Though this is not necessary in any way.
+* The consuming function receive the both the accumulator and an element of the array as argument. In the case of foldLeft, the accumulator is on the *left* and in the case of foldRight, the accumulator is on the *right*. In case of doubt, look at the type. `b` is the accumulator, `a` is the consumed. Looking at the type signatures of aFoldRu and aFoldLu may be easier if you are not used to the notation.
 
 Using `add` from `math`:
 ```
@@ -70,6 +70,7 @@ aIntersection and aRelativeComplement are functions on set. <https://en.wikipedi
 
 # List functions usage
 
+Beside the functions to construct lists and access elements, convert between list and array, everything else is the same.
 
 ```
 [code]
