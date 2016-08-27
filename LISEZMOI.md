@@ -1,7 +1,7 @@
 # leekwars-functional
 list and array functions respectively implemented and reimplemented for currying and performance.
 
-leekwars.com
+[leekwars](https://leekwars.com)
 
 # Pourquoi
 
@@ -11,12 +11,13 @@ Puis il m'est venu l'idée de faire une minilib pour liste. Les mêmes fonctions
 Je voulais des listes, premièrement a cause de ma tendance à coder de manière fonctionelle, deuxièmement parce que je voulais quelque chose pour laquelle les operations d'ajout et de retrait se ferait en temps fixe, et troisièmement parce que l'idée d'apporter une nouvelle structure de donnée à la communauté me donne la possibilité de m'auto-mousser. Même si je ne pense pas que ca verra beaucoup d'utilisation.
 
 
-Pendant que je les codais, me battant contre les boucles infinis, j'ai utilisé mes fonctions pour tableaux afin de comparer autant les résultats que les performances. J'étais ravi de voir comment mes listes se débrouillaient en comparaison des tableaux. (Tout en balayant sous le tapis l'acces random des tableaux.) Il vint un temps où je voulu voir à quel point je gagnais contre les fonctions par défaut. (J'aime me fair plaisir sur ce que je fais.) Impossible a battre.
+Pendant que je les codais, me battant contre les boucles infinis, j'ai utilisé mes fonctions pour tableaux afin de comparer autant les résultats que les performances. J'étais ravi de voir comment mes listes se débrouillaient en comparaison des tableaux. (Tout en balayant sous le tapis l'acces random des tableaux.) Il vint un temps où je voulu voir à quel point je gagnais contre les fonctions par défaut. (J'aime me fair plaisir sur ce que je fais.)
+Puis la comparaison avec arrayFoldLeft et arrayFoldRight s'ensuivit. Sacré potager que cette abeille de fertilisant est rapide. (Ca marche mieux dans la version anglaise.) Impossible a battre.
 Même si ca ameliore encore les performances des autres fonctions sur les tableaux, le fait que la construction de tableaux soit si lourd fait que les listes en valent tout de meme la peine. Donc je ne suis pas trop malheureux. En plus c'est cool de ne plus avoir une seule fonction sur tableaux avec une boucle imperative.
 
 # Utilisation des fonctions sur tableaux
 
-Here are some examples on how to use the array functions.
+Voici quelques exemples montrant comment utiliser les fonctions sur tableaux.
 ```
 [code]
 var xs = [1, 2, 3];
@@ -42,11 +43,11 @@ var ret = aFoldRu(add)(0)(xs);
 [/code]
 ```
 
-Important things to understand with foldLeft and foldRight:
-* The accumulator (second argument) is generally an identity element, like 0 in the case of addition (0 + 1 = 1). Though this is not necessary in any way.
-* The consuming function receive the both the accumulator and an element of the array. In the case of foldLeft, the accumulator is on the *left* and in the case of foldRight, the accumulator is on the *right*. In case of doubt, look at the type. `b` is the accumulator, `a` is the consumed. Looking at the type signatures of aFoldRu and aFoldLu may be easier if you are not used to the notation.
+Importantes choses a comprendre savec foldLeft et foldRight:
+* L'accumulateur (second argument) est généralement un élément identité, comme le 0 avec l'addition (1 + 0 = 1). Cela dit, ca n'est pas nécessaire du tout.
+* La fonction de consommation recoit et l'accumulateur, et un élément du tableau en argument. Dans le cas de foldLeft, l'accumulateur est à *gauche* et dans le cas de foldRight, l'accumulateur est à *droite*. En cas de doute, jetez un coups d'oeil au type. `b` est l'accumulateur, `a` est le consommé. Observer le typage de aFoldLu et aFoldRu devrait être plus simple si vous n'avez pas l'habitude de cette notation.
 
-Using `add` from `math`:
+Utilisant `add` definit dans `math`:
 ```
 [code]
 var xs = [1, 2, 3];
@@ -66,10 +67,13 @@ var ys = prepend123([]);
 [/code]
 ```
 
-aIntersection and aRelativeComplement are functions on set. <https://en.wikipedia.org/wiki/Set_(mathematics)#Basic_operations>
+aIntersection et aRelativeComplement sont des fonctions sur les ensembles. Je laisse le lien anglais, je trouve les dessins explicites.
+[Set_(mathematics)#Basic_operations](https://en.wikipedia.org/wiki/Set_(mathematics)#Basic_operations)
+<https://en.wikipedia.org/wiki/Set_(mathematics)#Basic_operations>
 
-# List functions usage
+# Utilisation des fonctions sur les listes
 
+Mis a part les fonction de construction et d'accès aux éléments, de conversion entre liste et tableau, tout le reste fonctionne de la même manière.
 
 ```
 [code]
@@ -110,6 +114,6 @@ xs1(x2, xs2);
 // x1 = 1
 // xs1 = (2)
 // x2 = 2
-// xs2 = null -- remember, we do not have the mean do define our own data types
+// xs2 = null -- rappelez vous, nous n'avons pas les moyens de definir nos propre types de donnée
 [/code]
 ```

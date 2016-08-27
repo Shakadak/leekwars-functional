@@ -66,7 +66,8 @@ var ys = prepend123([]);
 [/code]
 ```
 
-aIntersection and aRelativeComplement are functions on set. <https://en.wikipedia.org/wiki/Set_(mathematics)#Basic_operations>
+aIntersection and aRelativeComplement are functions on set.
+[Set_(mathematics)#Basic_operations](https://en.wikipedia.org/wiki/Set_(mathematics)#Basic_operations) <https://en.wikipedia.org/wiki/Set_(mathematics)#Basic_operations>
 
 # List functions usage
 
