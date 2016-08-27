@@ -11,6 +11,18 @@ function lFoldL(@f){ return function(@b) { return function(@as) {
 };};}
 
 /**
+* lFoldLu : ((b, a) -> b) -> b -> List a -> b
+*/
+function lFoldLu(@f){ return function(@b) { return function(@as) {
+	var acc = @b, x, xs = @as;
+	while (xs !== null) {
+		xs(x, xs);
+		acc = f(acc, x);
+	}
+	return @acc;
+};};}
+
+/**
 * lFoldR : (a -> b -> b) -> b -> List a -> b
 */
 function lFoldR(@f) { return function(@b) { return function(@as) {
