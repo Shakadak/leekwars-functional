@@ -112,11 +112,16 @@ function lIter(@f) { return function(@xs) {
 * ulIter : ((a -> ()), List a) -> ()
 */
 function ulIter(@f, @xs) {
-	if (xs !== null) {
+	/*if (xs !== null) {
 		var x_, xs_;
 		xs(x_, xs_);
 		f(x_);
 		ulIter(f, xs_);
+	}*/
+	var _x, _xs = xs;
+	while (_xs !== null) {
+		_xs(_x, _xs);
+		f(_x);
 	}
 }
 
