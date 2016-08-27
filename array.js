@@ -12,7 +12,7 @@ function aFoldL(@f) { return function(@b) { return function(@as) {
 /**
 * aFoldLu : ((b, a) -> b) -> b -> Array a -> b
 */
-function aFoldL(@f) { return function(@b) { return function(@as) {
+function aFoldLu(@f) { return function(@b) { return function(@as) {
 	return arrayFoldLeft(as, f, b);
 };};};
 
@@ -26,7 +26,7 @@ function aFoldR(@f) { return function(@b) { return function(@as) {
 /**
 * aFoldR : ((a, b) -> b) -> b -> Array a -> b
 */
-function aFoldR(@f) { return function(@b) { return function(@as) {
+function aFoldRu(@f) { return function(@b) { return function(@as) {
 	return arrayFoldRight(as, f, b);
 };};}
 
