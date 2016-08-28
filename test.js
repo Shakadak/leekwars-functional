@@ -2,19 +2,21 @@ include("debug");
 include("array");
 include("math");
 include("list");
+include("pure_list");
 
 var array = [];
+var i = 0;
 startOp();
-unshift(array, 3);
-stopOp("unshift(array, 3);");
+array[i++] = 1;
+stopOp("array[0] = 1;");
 debug("array: " + array);
 startOp();
-unshift(array, 2);
-stopOp("unshift(array, 2);");
+array[i++] = 2;
+stopOp("array[1] = 2;");
 debug("array: " + array);
 startOp();
-unshift(array, 1);
-stopOp("unshift(array, 1);");
+array[i++] = 3;
+stopOp("array[2] = 3;");
 debug("array: " + array);
 array = [];
 startOp();
@@ -43,15 +45,15 @@ stopOp("var ux = lCons(1, lCons(2, lSingleton(3)));");
 
 startOp();
 var xa = [];
-xa[0] = @v1;
-xa[1] = @v2;
-xa[2] = @v3;
+xa[0] = v1;
+xa[1] = v2;
+xa[2] = v3;
 stopOp("var xa");
 
 debug("xa: " + xa);
 
 startOp();
-var xb = [@v1,@v2,@v3];
+var xb = @[v1,v2,v3];
 stopOp("var xb = [1,2,3];");
 
 startOp();
@@ -62,7 +64,7 @@ debug(y);
 debug("lToArray(ux): " + lToArray(ux));
 
 
-v1 = 3; v3 = 456;
+//v1 = 3; v3 += 456;
 startOp();
 var yB = lToArray(x);
 stopOp("var yB = lToArray(x);");
@@ -129,16 +131,32 @@ var ms1 = aMap(function(g){return g != 1;})(ns);
 stopOp("var ms1 = aMap((!=1))(ns);");
 debug(ms1);
 
-startOp();
-var f1 = lFoldR(add)(0)(z);
-stopOp("var f1 = lFoldR(add)(z);");
-debug(f1);
 
+debug("\n--- Fold tests ---");
+startOp();
+var f1 = lFoldL(add)(0)(z);
+stopOp("var f1 = lFoldL(add)(0)(z);");
+debug(f1);
 
 startOp();
 var f3 = aFoldL(add)(0)(ns);
-stopOp("var f3 = aFoldL(add)(z);");
+stopOp("var f3 = aFoldL(add)(0)(ns);");
 debug(f3);
+
+startOp();
+var f2 = lFoldR(add)(0)(z);
+stopOp("var f2 = lFoldR(add)(0)(z);");
+debug(f2);
+
+startOp();
+var f4 = aFoldR(add)(0)(ns);
+stopOp("var f4 = aFoldR(add)(0)(ns);");
+debug(f4);
+
+startOp();
+var f5 = sum(ns);
+stopOp("var f5 = sum(ns);");
+debug(f5);
 
 debug(lToArray(z));
 
@@ -206,6 +224,49 @@ startOp();
 var cc5 = aConcat(nss);
 stopOp("var cc5 = aConcat(nss);");
 debug("cc5: " + cc5);
+
+debug("\n--- Iter tests ---");
+var size = 0;
+startOp();
+lIter(function(@a){size++;})(z);
+stopOp("lIter(function(@a){size++;})(z);");
+debug("size: " + size);
+
+size = 0;
+startOp();
+aIter(function(@a){size++;})(ns);
+stopOp("aIter(function(@a){x++;})(z);");
+debug("size: " + size);
+
+size = 0;
+startOp();
+arrayIter(ns, function(@a){size++;});
+stopOp("arrayIter(ns, function(@a){x++;});");
+debug("size: " + size);
+
+size = 0;
+startOp();
+aIterBis(function(@a){size++;})(ns);
+stopOp("aIterBis(function(@a){size++;})(ns);");
+debug("size: " + size);
+debug("count(ns): " + size);
+
+
+
+debug("\n--- ConcatMap test ---");
+
+var lcm1 = lFromArray([1,2,3]);
+startOp();
+var cm1 = lConcatMap(function(@a){return @lcm1;})(z);
+stopOp("lConcatMap(function(@a){return [1,2,3];})(z);");
+debug("cm1: " + lToArray(cm1));
+
+var acm2 = [1,2,3];
+startOp();
+var cm2 = aConcatMap(function(@a){return @acm2;})(ns);
+stopOp("aConcatMap(function(@a){return [1,2,3];})(ns);");
+debug("cm2: " + cm2);
+
 
 debug("z: " + lToArray(z));
 debug("ux: " + lToArray(ux));
