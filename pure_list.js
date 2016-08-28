@@ -87,7 +87,7 @@ function pulMap(@f, @xs) {
 * plConcat : List (List a) -> List a
 */
 function plConcat(@xss) {
-	return pulFoldRu(pulAppend, null, xss);
+	return ulFoldRu(pulAppend, null, xss);
 }
 
 /**
@@ -108,7 +108,7 @@ function plAppend(@xs) { return function(@ys) {
 * pulAppend : (List a, List a) -> List a
 */
 function pulAppend(@xs, @ys) {
-	return pulFoldRu(pulCons, ys, xs);
+	return ulFoldRu(pulCons, ys, xs);
 }
 
 /**
@@ -126,8 +126,8 @@ function pulFilter(@p, @xs){
 	else             {
 		var _x, _xs;
 		xs(_x, _xs);
-		if (p(_x)) { return pulCons(_x, ulFilter(p, _xs)); }
-		else      { return ulFilter(p, _xs); }
+		if (p(_x)) { return pulCons(_x, pulFilter(p, _xs)); }
+		else      { return pulFilter(p, _xs); }
 	}
 }
 
