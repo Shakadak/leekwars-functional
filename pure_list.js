@@ -10,9 +10,9 @@
 */
 
 /**
-* lFoldL : (b -> a -> b) -> b -> List a -> b
+* plFoldL : (b -> a -> b) -> b -> List a -> b
 */
-function lFoldL(@f){ return function(@b) { return function(@as) {
+function plFoldL(@f){ return function(@b) { return function(@as) {
 	var acc = @b, x, xs = @as;
 	while (xs !== null) {
 		xs(x, xs);
@@ -22,9 +22,9 @@ function lFoldL(@f){ return function(@b) { return function(@as) {
 };};}
 
 /**
-* lFoldLu : ((b, a) -> b) -> b -> List a -> b
+* plFoldLu : ((b, a) -> b) -> b -> List a -> b
 */
-function lFoldLu(@f){ return function(@b) { return function(@as) {
+function plFoldLu(@f){ return function(@b) { return function(@as) {
 	var acc = @b, x, xs = @as;
 	while (xs !== null) {
 		xs(x, xs);
@@ -34,33 +34,33 @@ function lFoldLu(@f){ return function(@b) { return function(@as) {
 };};}
 
 /**
-* lFoldR : (a -> b -> b) -> b -> List a -> b
+* plFoldR : (a -> b -> b) -> b -> List a -> b
 */
-function lFoldR(@f) { return function(@b) { return function(@as) {
-	return ulFoldR(f, b, as);
+function plFoldR(@f) { return function(@b) { return function(@as) {
+	return pulFoldR(f, b, as);
 };};}
 
 /**
-* ulFoldR : ((a -> b -> b), b, List a) -> b
+* pulFoldR : ((a -> b -> b), b, List a) -> b
 */
-function ulFoldR(@f, @b, @as) {
+function pulFoldR(@f, @b, @as) {
 	if (as === null) { return @b; }
 	else             {
 		var x, xs;
 		as(x, xs);
-		return f(x)(ulFoldR(f, b, xs));
+		return f(x)(pulFoldR(f, b, xs));
 	}
 }
 
 /**
-* ulFoldRu : (((a, b) -> b), b, List a) -> b
+* pulFoldRu : (((a, b) -> b), b, List a) -> b
 */
-function ulFoldRu(@f, @b, @as) {
+function pulFoldRu(@f, @b, @as) {
 	if (as === null) { return @b; }
 	else             {
 		var _x, _xs;
 		as(_x, _xs);
-		return f(_x, ulFoldRu(f, b, _xs));
+		return f(_x, pulFoldRu(f, b, _xs));
 	}
 }
 
@@ -87,14 +87,14 @@ function pulMap(@f, @xs) {
 * plConcat : List (List a) -> List a
 */
 function plConcat(@xss) {
-	return ulFoldRu(pulAppend, null, xss);
+	return pulFoldRu(pulAppend, null, xss);
 }
 
 /**
 * plConcatMap : (a -> List b) -> List a -> List b
 */
 function plConcatMap(@f) { return function(@xs) {
-	return ulFoldRu(function(@x, @acc){return pulAppend(f(x), acc);}, null, xs);
+	return pulFoldRu(function(@x, @acc){return pulAppend(f(x), acc);}, null, xs);
 };}
 
 /**
@@ -108,7 +108,7 @@ function plAppend(@xs) { return function(@ys) {
 * pulAppend : (List a, List a) -> List a
 */
 function pulAppend(@xs, @ys) {
-	return ulFoldRu(pulCons, ys, xs);
+	return pulFoldRu(pulCons, ys, xs);
 }
 
 /**
@@ -132,16 +132,16 @@ function pulFilter(@p, @xs){
 }
 
 /**
-* lIter : (a -> ()) -> List a -> ()
+* plIter : (a -> ()) -> List a -> ()
 */
-function lIter(@f) { return function(@xs) {
-	ulIter(f, xs);
+function plIter(@f) { return function(@xs) {
+	pulIter(f, xs);
 };}
 
 /**
-* ulIter : ((a -> ()), List a) -> ()
+* pulIter : ((a -> ()), List a) -> ()
 */
-function ulIter(@f, @xs) {
+function pulIter(@f, @xs) {
 	var _x, _xs = @xs;
 	while (_xs !== null) {
 		_xs(_x, _xs);
@@ -150,9 +150,9 @@ function ulIter(@f, @xs) {
 }
 
 /**
-* lHead : List a -> a
+* plHead : List a -> a
 */
-function lHead(@l) {
+function plHead(@l) {
 	if (l === null) { debugE("lHead: Empty list");}
 	var x;
 	l(x, null);
@@ -160,9 +160,9 @@ function lHead(@l) {
 }
 
 /**
-* lTail : List a -> List a
+* plTail : List a -> List a
 */
-function lTail(@l) {
+function plTail(@l) {
 	if (l === null) { debugE("lTail: Empty list");}
 	var xs;
 	l(null, xs);
@@ -217,9 +217,9 @@ function plFromArray(@xs){
 }
 
 /**
-* lToArray : List a -> Array a
+* plToArray : List a -> Array a
 */
-function lToArray(@l){
+function plToArray(@l){
 	var x, xs = @l;
 	var ret = [];
 	while (xs !== null) {
