@@ -3,7 +3,7 @@
    var x = 1;
    var xs = plSingleton(x); // xs = (1);
    x = 2; // xs = (2);
-   If you are fine with this behavior, then go ahead, the gain in term of construction is pretty significant.
+   If you are fine with this behavior, then go ahead, the gain in term of construction is pretty significant. (2op per element.)
 */
 
 /**
@@ -81,6 +81,18 @@ function pulMap(@f, @xs) {
 }
 
 /**
+* pulAppendMap : ((a -> b), List b, List a) -> List b
+*/
+function pulAppendMap(@f, @xs, @acc) {
+	if (xs === null) { return @acc; }
+	else             {
+		var _x, _xs;
+		xs(_x, _xs);
+		return pulCons(f(_x), pulAppendMap(f, _xs, acc));
+	}
+}
+
+/**
 * plConcat : List (List a) -> List a
 */
 function plConcat(@xss) {
@@ -93,6 +105,25 @@ function plConcat(@xss) {
 function plConcatMap(@f) { return function(@xs) {
 	return pulFoldRu(function(@x, @acc){return pulAppend(f(x), acc);}, null, xs);
 };}
+
+/**
+* lApply : List (a -> b) -> List a -> List b
+*/
+function plApply(@fs) { return function(@xs) {
+	return pulApply(fs, xs);
+};}
+
+/**
+* pulApply : (List (a -> b), List a) -> List b
+*/
+function pulApply(@fs, @xs) {
+	if (fs === null) { return null; }
+	else             {
+		var _f, _fs;
+		fs(_f, _fs);
+		return pulAppendMap(_f, xs, pulApply(_fs, xs));
+	}
+}
 
 /**
 * plAppend : List a -> List a -> List a

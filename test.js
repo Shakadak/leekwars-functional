@@ -234,8 +234,18 @@ debug("aBig: " + aBig);
 
 debug("\n--- Apply tests ---");
 var afs = [add(0), add(1), add(100)];
+var lfs = lFromArray(afs);
+var plfs = plFromArray(afs);
 debug("var fs = [add(0), add(1), add(100)];");
 
+startOp();
+var lapp = lApply(lfs)(lBig);
+stopOp("var lapp = lApply(lfs)(lBig);");
+debug(lToArray(lapp));
+startOp();
+var plapp = plApply(plfs)(lBig);
+stopOp("var plapp = plApply(plfs, lBig);");
+debug(lToArray(plapp));
 startOp();
 var aapp = aApply(afs)(aBig);
 stopOp("var aapp = aApply(afs)(aBig);");

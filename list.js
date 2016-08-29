@@ -73,6 +73,18 @@ function ulMap(@f, @xs) {
 }
 
 /**
+* ulAppendMap : ((a -> b), List b, List a) -> List b
+*/
+function ulAppendMap(@f, @xs, @acc) {
+	if (xs === null) { return @acc; }
+	else             {
+		var _x, _xs;
+		xs(_x, _xs);
+		return ulCons(f(_x), ulAppendMap(f, _xs, acc));
+	}
+}
+
+/**
 * lConcat : List (List a) -> List a
 */
 function lConcat(@xss) {
@@ -85,6 +97,25 @@ function lConcat(@xss) {
 function lConcatMap(@f) { return function(@xs) {
 	return ulFoldRu(function(@x, @acc){return ulAppend(f(x), acc);}, null, xs);
 };}
+
+/**
+* lApply : List (a -> b) -> List a -> List b
+*/
+function lApply(@fs) { return function(@xs) {
+	return ulApply(fs, xs);
+};}
+
+/**
+* ulApply : (List (a -> b), List a) -> List b
+*/
+function ulApply(@fs, @xs) {
+	if (fs === null) { return null; }
+	else             {
+		var _f, _fs;
+		fs(_f, _fs);
+		return ulAppendMap(_f, xs, ulApply(_fs, xs));
+	}
+}
 
 /**
 * lAppend : List a -> List a -> List a
