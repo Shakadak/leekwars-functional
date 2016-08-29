@@ -84,20 +84,16 @@ function aApply(@fs) { return function(@xs) {
 */
 function aIntersection(@xs) { return function(@ys) {
     if (count(ys) < count(xs)) {return aIntersection(ys)(xs);}
-    var tmp = [];
-    for (var x in xs) {
-        assocInsert(x)(true)(tmp); }
-    return aFilter(assocLookup(tmp))(ys);
+	var tmp = arrayFoldLeft(xs, function(@acc, @x) {acc["" + x] = true; return @acc;}, []);
+	return aFilter(function(@y){return tmp["" + y];})(ys);
 };}
 
 /**
 * aRelativeComplement : Array a -> Array a -> Array a
 */
 function aRelativeComplement(@xs) { return function(@ys) {
-    var tmp = [];
-    for (var y in ys) {
-        assocInsert(y)(true)(tmp); }
-    return aFilter(negate(assocLookup(tmp)))(xs);
+    var tmp = arrayFoldLeft(ys, function(@acc, @y) {acc["" + y] = true; return @acc;}, []);
+	return aFilter(function(@x){return !tmp["" + x];})(xs);
 };}
 
 /**

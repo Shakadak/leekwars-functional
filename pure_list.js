@@ -3,7 +3,7 @@
    var x = 1;
    var xs = plSingleton(x); // xs = (1);
    x = 2; // xs = (2);
-   If you are fine with this behavior, then go ahead, the gain in term of construction is pretty significant. (2op per element.)
+   If you are fine with this behavior, then go ahead, the gain in term of construction is pretty significant. (2op per element.) Otherwise, use the others constructors (lCons and ulCons) when constructing by hand, and then use the list manipulation functions from this file. They are compatible with each others, and from future usage, and the trend I am seeing at the moment, the other lists functions will probably disappear.
 */
 
 /**
