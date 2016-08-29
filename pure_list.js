@@ -81,7 +81,7 @@ function pulMap(@f, @xs) {
 }
 
 /**
-* pulAppendMap : ((a -> b), List b, List a) -> List b
+* pulAppendMap : ((a -> b), List a, List b) -> List b
 */
 function pulAppendMap(@f, @xs, @acc) {
 	if (xs === null) { return @acc; }
@@ -105,6 +105,11 @@ function plConcat(@xss) {
 function plConcatMap(@f) { return function(@xs) {
 	return pulFoldRu(function(@x, @acc){return pulAppend(f(x), acc);}, null, xs);
 };}
+
+/**
+* pulConcatFilter : ((a -> Bool), List (List a)) -> List a
+*/
+function pulConcatFilter(@p, @xss) {}
 
 /**
 * lApply : List (a -> b) -> List a -> List b
@@ -155,7 +160,27 @@ function pulFilter(@p, @xs){
 		var _x, _xs;
 		xs(_x, _xs);
 		if (p(_x)) { return pulCons(_x, pulFilter(p, _xs)); }
-		else      { return pulFilter(p, _xs); }
+		else       { return pulFilter(p, _xs); }
+	}
+}
+
+/**
+* plAppendFilter : (a -> Bool) -> List a -> List a -> List a
+*/
+function plAppendFilter(@p) { return function(@xs) {return function(@acc){
+	return pulAppendFilter(p, xs, acc);
+};};}
+
+/**
+* pulAppendFilter : ((a -> Bool), List a, List a) -> List a
+*/
+function pulAppendFilter(@p, @xs, @acc) {
+	if (xs === null) { return @acc; }
+	else             {
+		var _x, _xs;
+		xs(_x, _xs);
+		if (p(_x)) { return pulCons(_x, pulAppendFilter(p, _xs, acc)); }
+		else       { return pulAppendFilter(p, _xs, acc); }
 	}
 }
 
