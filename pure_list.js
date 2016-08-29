@@ -154,9 +154,11 @@ function pulIter(@f, @xs) {
 */
 function plHead(@l) {
 	if (l === null) { debugE("lHead: Empty list");}
-	var x;
-	l(x, null);
-	return @x;
+	else            {
+		var x;
+		l(x, null);
+		return @x;
+	}
 }
 
 /**
@@ -164,9 +166,11 @@ function plHead(@l) {
 */
 function plTail(@l) {
 	if (l === null) { debugE("lTail: Empty list");}
-	var xs;
-	l(null, xs);
-	return @xs;
+	else            {
+		var xs;
+		l(null, xs);
+		return @xs;
+	}
 }
 
 /**

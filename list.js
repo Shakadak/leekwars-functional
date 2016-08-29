@@ -143,9 +143,11 @@ function ulIter(@f, @xs) {
 */
 function lHead(@l) {
 	if (l === null) { debugE("lHead: Empty list");}
-	var x;
-	l(x, null);
-	return @x;
+	else            {
+		var x;
+		l(x, null);
+		return @x;
+	}
 }
 
 /**
@@ -153,9 +155,11 @@ function lHead(@l) {
 */
 function lTail(@l) {
 	if (l === null) { debugE("lTail: Empty list");}
-	var xs;
-	l(null, xs);
-	return @xs;
+	else            {
+		var xs;
+		l(null, xs);
+		return @xs;
+	}
 }
 
 /**
@@ -192,8 +196,9 @@ function lCons(@x){
 */
 function ulCons(@x, @xs) {
 	var _x = @x, _xs = @xs;
-	return function(@x_, @xs_) { x_ = @_x; xs_ = @_xs; };
-}
+	return function(@x_, @xs_) {
+	x_ = @_x; xs_ = @_xs;
+};}
 
 /**
 * ulSnoc : (List a, a) -> List a
