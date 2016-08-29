@@ -231,3 +231,16 @@ debug(acm);
 debug("lBig: " + lToArray(lBig));
 debug("plBig: " + plToArray(plBig));
 debug("aBig: " + aBig);
+
+debug("\n--- Apply tests ---");
+var afs = [add(0), add(1), add(100)];
+debug("var fs = [add(0), add(1), add(100)];");
+
+startOp();
+var aapp = aApply(afs)(aBig);
+stopOp("var aapp = aApply(afs)(aBig);");
+debug(aapp);
+
+debug("lBig: " + lToArray(lBig));
+debug("plBig: " + plToArray(plBig));
+debug("aBig: " + aBig);

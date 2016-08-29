@@ -75,9 +75,12 @@ function aApply(@fs) { return function(@xs) {
 	var ret = [];
 	for (var f in fs) {
 		var fv = @f;
-		pushAll(ret, aMap(fv)(xs));
+		ret += arrayFoldLeft(xs, function(@acc, @x){push(acc, f(x));return @acc;}, []);
 	}
 	return @ret;
+	/*return arrayFoldLeft(fs, function(@acc, @f){
+				arrayFoldLeft(xs, function(@acc, @x){
+					push(acc, f(x));return @acc;}, acc)}, []);*/
 };}
 
 /**
