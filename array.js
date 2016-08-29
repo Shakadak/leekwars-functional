@@ -72,11 +72,11 @@ function aAppend(@xs) {return function(@ys) {
 * aApply : Array (a -> b) -> Array a -> Array b
 */
 function aApply(@fs) { return function(@xs) {
-	return arrayFoldLeft(fs, function(@acc, @f){
-				acc += arrayFoldLeft(xs, function(@_acc, @x){
-					push(_acc, f(x));return @_acc;}, []);
-				return @acc;
-			}, []);
+	var ret = [];
+	arrayFoldLeft(fs
+				, function(@_, @f){ arrayFoldLeft(xs, function(@__, @x){push(ret, f(x));}, null);}
+				, null);
+	return @ret;
 };}
 
 /**
