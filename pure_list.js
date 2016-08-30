@@ -109,7 +109,26 @@ function plConcatMap(@f) { return function(@xs) {
 /**
 * pulConcatFilter : ((a -> Bool), List (List a)) -> List a
 */
-function pulConcatFilter(@p, @xss) {}
+function pulConcatFilter(@p, @xss) {
+	if (xss === null) { return null; }
+	else              {
+		var _xs, _xss;
+		xss(_xs, _xss);
+		return pulAppendFilter(p, _xs, pulConcatFilter(p, _xss));
+	}
+}
+
+/**
+* pulConcatFilterMap : ((a -> List b), (b -> Bool), List a) -> List b
+*/
+function pulConcatFilterMap(@f, @p, @xs) {
+	if (xs === null) { return null; }
+	else             {
+		var _x, _xs;
+		xs(_x, _xs);
+		return pulAppendFilter(p, f(_x), pulConcatFilterMap(f, p, _xs));
+	}
+}
 
 /**
 * lApply : List (a -> b) -> List a -> List b
