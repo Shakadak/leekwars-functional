@@ -144,6 +144,7 @@ startOp();
 var pla = plAppend(plBig)(plSmall);
 stopOp("var pla = plAppend(plBig)(plSmall);");
 debug(plToArray(pla));
+startOp();
 var aa = aAppend(aBig)(aSmall);
 stopOp("var aa = aAppend(aBig)(aSmall); ...");
 debug(aa);
@@ -250,6 +251,26 @@ startOp();
 var aapp = aApply(afs)(aBig);
 stopOp("var aapp = aApply(afs)(aBig);");
 debug(aapp);
+
+debug("lBig: " + lToArray(lBig));
+debug("plBig: " + plToArray(plBig));
+debug("aBig: " + aBig);
+
+debug("\n--- aRelativeComplement tests ---");
+startOp();
+var arc = aRelativeComplement(aBig)(aSmall);
+stopOp("var arc = aRelativeComplement(aBig)(aSmall);");
+debug(arc);
+
+debug("lBig: " + lToArray(lBig));
+debug("plBig: " + plToArray(plBig));
+debug("aBig: " + aBig);
+
+debug("\n--- aIntersection tests ---");
+startOp();
+var ai = aIntersection(aBig)(aSmall);
+stopOp("var ai = aIntersection(aBig)(aSmall);");
+debug(ai);
 
 debug("lBig: " + lToArray(lBig));
 debug("plBig: " + plToArray(plBig));
