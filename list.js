@@ -1,9 +1,10 @@
 /*
    WARNING: THIS WORKS AS EXPECTED ONLY IN THE CONTEXT OF NO MUTATION
    var x = 1;
-   var xs = plSingleton(x); // xs = (1);
+   var xs = lSingleton(x); // xs = (1);
    x = 2; // xs = (2);
-   If you are fine with this behavior, then go ahead, the gain in term of construction is pretty significant. (2op per element.) Otherwise, use the others constructors (lCons and ulCons) when constructing by hand, and then use the list manipulation functions from this file. They are compatible with each others, and from future usage, and the trend I am seeing at the moment, the other lists functions will probably disappear.
+   If you are fine with this behavior, then go ahead, the gain in term of construction is pretty significant. (2op per element.) Otherwise, use the others constructors (lSafe[Tail]Cons and ulSafe[Tail]Cons) when constructing by hand.
+   You can even go and dirty your hand by direclty defining an anonymous function: `function(@x_, @xs_) {x_ = @value; xs_ = @list;}` value and list being provided by yourself. I think I'm going to try that for the manipulation functions.
 */
 
 /**
@@ -371,7 +372,7 @@ function lFromArray(@xs){
 }
 
 /**
-* plToArray : List a -> Array a
+* lToArray : List a -> Array a
 */
 function lToArray(@l){
 	var x, xs = @l;
@@ -383,6 +384,9 @@ function lToArray(@l){
 	return @ret;
 }
 
+/**
+* lToString : List a -> String
+*/
 function lToString(@l) {
 	var toString = function(@x, @xs) { return "ulCons(" + x + ", " + xs + ")"; };
 	return ulFoldRu(toString, null, l);
