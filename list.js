@@ -85,7 +85,7 @@ function ulMap(@f, @xs) {
 }
 
 function _ulMap(@f, @_xs) {
-	if (_xs === null) { return@ _xs; }
+	if (_xs === null) { return@ null; }
 	else             {
 		var _x;
 		_xs(_x, _xs);
@@ -98,13 +98,7 @@ function _ulMap(@f, @_xs) {
 * ulAppendMap : ((a -> b), List a, List b) -> List b
 */
 function ulAppendMap(@f, @xs, @acc) {
-	if (xs === null) { return@ acc; }
-	else             {
-		var _x, _xs;
-		xs(_x, _xs);
-		return@ function(@x_, @xs_) { x_ = f(_x); xs_ = ulAppendMap(f, _xs, acc); };
-		//return ulCons(f(_x), ulAppendMap(f, _xs, acc));
-	}
+	return _ulAppendMap(f, @xs, acc);
 }
 
 function _ulAppendMap(@f, @_xs, @acc) {
@@ -113,7 +107,6 @@ function _ulAppendMap(@f, @_xs, @acc) {
 		var _x;
 		_xs(_x, _xs);
 		return@ function(@x_, @xs_) { x_ = f(_x); xs_ = _ulAppendMap(f, _xs, acc); };
-		//return ulCons(f(_x), ulAppendMap(f, _xs, acc));
 	}
 }
 
@@ -172,7 +165,7 @@ function ulConcatMapFilter(@p, @f, @xs) {
 * lApply : List (a -> b) -> List a -> List b
 */
 function lApply(@fs) { return function(@xs) {
-	return ulApply(fs, xs);
+	return _ulApply(@fs, xs);
 };}
 
 /**
@@ -184,6 +177,15 @@ function ulApply(@fs, @xs) {
 		var _f, _fs;
 		fs(_f, _fs);
 		return ulAppendMap(_f, xs, ulApply(_fs, xs));
+	}
+}
+
+function _ulApply(@_fs, @_xs) {
+	if (_fs === null) { return@ null; }
+	else             {
+		var _f;
+		_fs(_f, _fs);
+		return _ulAppendMap(_f, @_xs, _ulApply(_fs, _xs));
 	}
 }
 
