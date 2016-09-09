@@ -128,7 +128,7 @@ function lConcat(@xss) {
 * lConcatMap : (a -> List b) -> List a -> List b
 */
 function lConcatMap(@f) { return function(@xs) {
-	return ulFoldRu(function(@x, @acc){return ulAppend(f(x), acc);}, null, xs);
+	return _ulFoldRu(function(@x, @acc){return _ulAppend(f(x), acc);}, null, @xs);
 };}
 
 /**
