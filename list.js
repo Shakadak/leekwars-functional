@@ -1,3 +1,11 @@
+/*
+   WARNING: THIS WORKS AS EXPECTED ONLY IN THE CONTEXT OF NO MUTATION
+   var x = 1;
+   var xs = plSingleton(x); // xs = (1);
+   x = 2; // xs = (2);
+   If you are fine with this behavior, then go ahead, the gain in term of construction is pretty significant. (2op per element.) Otherwise, use the others constructors (lCons and ulCons) when constructing by hand, and then use the list manipulation functions from this file. They are compatible with each others, and from future usage, and the trend I am seeing at the moment, the other lists functions will probably disappear.
+*/
+
 /**
 * lFoldL : (b -> a -> b) -> b -> List a -> b
 */
@@ -11,7 +19,7 @@ function lFoldL(@f){ return function(@b) { return function(@as) {
 };};}
 
 /**
-* lFoldLu : ((b, a) -> b) -> b -> List a -> b
+* plFoldLu : ((b, a) -> b) -> b -> List a -> b
 */
 function lFoldLu(@f){ return function(@b) { return function(@as) {
 	var acc = @b, x, xs = @as;
@@ -66,14 +74,14 @@ function lMap(@f) { return function (@xs) {
 function ulMap(@f, @xs) {
 	if (xs === null) { return @xs; }
 	else             {
-		var _x, _xs;
-		xs(_x, _xs);
+		var _x, _xs = @xs;
+		_xs(_x, _xs);
 		return ulCons(f(_x), ulMap(f, _xs));
 	}
 }
 
 /**
-* ulAppendMap : ((a -> b), List b, List a) -> List b
+* ulAppendMap : ((a -> b), List a, List b) -> List b
 */
 function ulAppendMap(@f, @xs, @acc) {
 	if (xs === null) { return @acc; }
@@ -97,6 +105,43 @@ function lConcat(@xss) {
 function lConcatMap(@f) { return function(@xs) {
 	return ulFoldRu(function(@x, @acc){return ulAppend(f(x), acc);}, null, xs);
 };}
+
+/**
+* ulConcatFilter : ((a -> Bool), List (List a)) -> List a
+*/
+function ulConcatFilter(@p, @xss) {
+	if (xss === null) { return null; }
+	else              {
+		var _xs, _xss;
+		xss(_xs, _xss);
+		return ulAppendFilter(p, _xs, ulConcatFilter(p, _xss));
+	}
+}
+
+/**
+* ulConcatFilterMap : ((a -> List b), (b -> Bool), List a) -> List b
+*/
+function ulConcatFilterMap(@f, @p, @xs) {
+	if (xs === null) { return null; }
+	else             {
+		var _x, _xs;
+		xs(_x, _xs);
+		return ulAppendFilter(p, f(_x), ulConcatFilterMap(f, p, _xs));
+	}
+}
+
+/**
+* ulConcatMapFilter : ((b -> Bool), (a -> List b), List a) -> List b
+*/
+function ulConcatMapFilter(@p, @f, @xs) {
+	if (xs === null) { return null; }
+	else             {
+		var _x, _xs;
+		xs(_x, _xs);
+		if (p(_x)) { return ulAppendMap(p, f(_x), ulConcatMapFilter(f, p, _xs)); }
+		else       { return ulConcatMapFilter(p, f, _xs); }
+	}
+}
 
 /**
 * lApply : List (a -> b) -> List a -> List b
@@ -147,7 +192,27 @@ function ulFilter(@p, @xs){
 		var _x, _xs;
 		xs(_x, _xs);
 		if (p(_x)) { return ulCons(_x, ulFilter(p, _xs)); }
-		else      { return ulFilter(p, _xs); }
+		else       { return ulFilter(p, _xs); }
+	}
+}
+
+/**
+* lAppendFilter : (a -> Bool) -> List a -> List a -> List a
+*/
+function lAppendFilter(@p) { return function(@xs) {return function(@acc){
+	return ulAppendFilter(p, xs, acc);
+};};}
+
+/**
+* ulAppendFilter : ((a -> Bool), List a, List a) -> List a
+*/
+function ulAppendFilter(@p, @xs, @acc) {
+	if (xs === null) { return @acc; }
+	else             {
+		var _x, _xs;
+		xs(_x, _xs);
+		if (p(_x)) { return ulCons(_x, ulAppendFilter(p, _xs, acc)); }
+		else       { return ulAppendFilter(p, _xs, acc); }
 	}
 }
 
@@ -194,16 +259,10 @@ function lTail(@l) {
 }
 
 /**
-* lSingleton : a -> List a
-*/
-function lSingleton(@x) {return lCons(x)(null);}
-
-/**
 * augment : ((a -> b -> b) -> b -> b) -> List a -> List a
 */
 function augment(@f) { return function(@xs) {
-	var _xs = @xs;
-	return f(lCons)(_xs);
+	return f(lCons)(xs);
 };}
 
 /**
@@ -212,9 +271,47 @@ function augment(@f) { return function(@xs) {
 function build(@f) { return f(lCons)(null);}
 
 /**
+* lSingleton : a -> List a
+*/
+function lSingleton(@x) {
+	return function(@x_, @xs_) { x_ = @x; xs_ = @null; };}
+
+/**
+* lSafeSingleton : a -> List a
+*/
+function lSafeSingleton(@x) {
+	var _x =@ x;
+	return function(@x_, @xs_) {
+	x_ = @_x; xs_ = @null;
+};}
+
+/**
 * lCons : a -> List a -> List a
 */
-function lCons(@x){
+function lCons(@x) {
+	return function(@xs) {
+		return function(@x_, @xs_) {
+	x_ = @x; xs_ = @xs;
+};};}
+
+/**
+* ulCons : (a, List a) -> List a
+*/
+function ulCons(@x, @xs) {
+	return function(@x_, @xs_) { x_ = @x; xs_ = @xs; };
+}
+
+/**
+* ulSnoc : (List a, a) -> List a
+*/
+function ulSnoc(@xs, @x) {
+	return function(@x_, @xs_) { x_ = @x; xs_ = @xs; };
+}
+
+/**
+* lSafeCons : a -> List a -> List a
+*/
+function lSafeCons(@x){
 	var _x = @x;
 	return function(@xs){
 		var _xs = @xs;
@@ -223,20 +320,47 @@ function lCons(@x){
 };};}
 
 /**
-* ulCons : (a, List a) -> List a
+* ulSafeCons : (a, List a) -> List a
 */
-function ulCons(@x, @xs) {
+function ulSafeCons(@x, @xs) {
 	var _x = @x, _xs = @xs;
 	return function(@x_, @xs_) {
 	x_ = @_x; xs_ = @_xs;
 };}
 
 /**
-* ulSnoc : (List a, a) -> List a
+* ulSafeSnoc : (List a, a) -> List a
 */
-function ulSnoc(@xs, @x) {
+function ulSafeSnoc(@xs, @x) {
 	var _x = @x, _xs = @xs;
 	return function(@x_, @xs_) { x_ = @_x; xs_ = @_xs; };
+}
+
+/**
+* lSafeTailCons : a -> List a -> List a
+*/
+function lSafeTailCons(@x){
+	return function(@xs){
+		var _xs =@ xs;
+		return function(@x_, @xs_) {
+	x_ =@ x; xs_ =@ _xs;
+};};}
+
+/**
+* ulSafeTailCons : (a, List a) -> List a
+*/
+function ulSafeTailCons(@x, @xs) {
+	var _xs =@ xs;
+	return function(@x_, @xs_) {
+	x_ =@ x; xs_ =@ _xs;
+};}
+
+/**
+* ulSafeTailSnoc : (List a, a) -> List a
+*/
+function ulSafeTailSnoc(@xs, @x) {
+	var _xs = @xs;
+	return function(@x_, @xs_) { x_ = @x; xs_ = @_xs; };
 }
 
 /**
@@ -247,7 +371,7 @@ function lFromArray(@xs){
 }
 
 /**
-* lToArray : List a -> Array a
+* plToArray : List a -> Array a
 */
 function lToArray(@l){
 	var x, xs = @l;
@@ -257,4 +381,9 @@ function lToArray(@l){
 		push(ret, x);
 	}
 	return @ret;
+}
+
+function lToString(@l) {
+	var toString = function(@x, @xs) { return "ulCons(" + x + ", " + xs + ")"; };
+	return ulFoldRu(toString, null, l);
 }
