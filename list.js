@@ -77,7 +77,8 @@ function ulMap(@f, @xs) {
 	else             {
 		var _x, _xs = @xs;
 		_xs(_x, _xs);
-		return ulCons(f(_x), ulMap(f, _xs));
+		return function(@x_, @xs_) { x_ = f(_x); xs_ = ulMap(f, _xs); };
+		//return ulCons(f(_x), ulMap(f, _xs));
 	}
 }
 
@@ -89,7 +90,8 @@ function ulAppendMap(@f, @xs, @acc) {
 	else             {
 		var _x, _xs;
 		xs(_x, _xs);
-		return ulCons(f(_x), ulAppendMap(f, _xs, acc));
+		return function(@x_, @xs_) { x_ = f(_x); xs_ = ulAppendMap(f, _xs, acc); };
+		//return ulCons(f(_x), ulAppendMap(f, _xs, acc));
 	}
 }
 
@@ -139,8 +141,8 @@ function ulConcatMapFilter(@p, @f, @xs) {
 	else             {
 		var _x, _xs;
 		xs(_x, _xs);
-		return p(_x) ? ulAppendMap(p, f(_x), ulConcatMapFilter(f, p, _xs))
-					 : ulConcatMapFilter(p, f, _xs);
+		return p(_x) ? ulAppendMap(p, f(_x), ulConcatMapFilter(p, f, _xs))
+					 : 						 ulConcatMapFilter(p, f, _xs);
 	}
 }
 
@@ -174,7 +176,14 @@ function lAppend(@xs) { return function(@ys) {
 * ulAppend : (List a, List a) -> List a
 */
 function ulAppend(@xs, @ys) {
-	return ulFoldRu(ulCons, ys, xs);
+	if (xs === null) { return @ys; }
+	else			 {
+		var _x, _xs;
+		xs(_x, _xs);
+		return function(@x_, @xs_) { x_ = _x; xs_ = ulAppend(_xs, ys); };
+
+	}
+	//return ulFoldRu(ulCons, ys, xs);
 }
 
 /**
@@ -192,8 +201,10 @@ function ulFilter(@p, @xs){
 	else             {
 		var _x, _xs;
 		xs(_x, _xs);
-		return p(_x) ? ulCons(_x, ulFilter(p, _xs))
-					 : ulFilter(p, _xs);
+		return p(_x) ? function(@x_, @xs_) { x_ = _x; xs_ = ulFilter(p, _xs); }
+					 : 										ulFilter(p, _xs);
+		/*return p(_x) ? ulCons(_x, ulFilter(p, _xs))
+					 : ulFilter(p, _xs);*/
 	}
 }
 
@@ -212,8 +223,10 @@ function ulAppendFilter(@p, @xs, @acc) {
 	else             {
 		var _x, _xs;
 		xs(_x, _xs);
-		return p(_x) ? ulCons(_x, ulAppendFilter(p, _xs, acc))
-					 : ulAppendFilter(p, _xs, acc);
+		return p(_x) ? function(@x_, @xs_) { x_ = _x; xs_ = ulAppendFilter(p, _xs, acc); }
+					 : 										ulAppendFilter(p, _xs, acc);
+		/*return p(_x) ? ulCons(_x, ulAppendFilter(p, _xs, acc))
+					 : ulAppendFilter(p, _xs, acc);*/
 	}
 }
 
