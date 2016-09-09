@@ -20,7 +20,7 @@ function lFoldL(@f){ return function(@b) { return function(@as) {
 };};}
 
 /**
-* plFoldLu : ((b, a) -> b) -> b -> List a -> b
+* lFoldLu : ((b, a) -> b) -> b -> List a -> b
 */
 function lFoldLu(@f){ return function(@b) { return function(@as) {
 	var acc = @b, x, xs = @as;
