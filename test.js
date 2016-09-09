@@ -134,6 +134,8 @@ var ac = aConcat(aBigSmall);
 stopOp("var ac = aConcat(aBigSmall);");
 debug("ac: " + ac);
 
+debug("lBigSmall: " + lToArray(lMap(lToArray)(lBigSmall)));
+debug("aBigSmall: " + aBigSmall);
 debug("lSmall: " + lToArray(lSmall));
 debug("aSmall: " + aSmall);
 debug("lBig: " + lToArray(lBig));
