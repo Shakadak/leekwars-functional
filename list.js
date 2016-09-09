@@ -139,8 +139,8 @@ function ulConcatMapFilter(@p, @f, @xs) {
 	else             {
 		var _x, _xs;
 		xs(_x, _xs);
-		if (p(_x)) { return ulAppendMap(p, f(_x), ulConcatMapFilter(f, p, _xs)); }
-		else       { return ulConcatMapFilter(p, f, _xs); }
+		return p(_x) ? ulAppendMap(p, f(_x), ulConcatMapFilter(f, p, _xs))
+					 : ulConcatMapFilter(p, f, _xs);
 	}
 }
 
@@ -192,8 +192,8 @@ function ulFilter(@p, @xs){
 	else             {
 		var _x, _xs;
 		xs(_x, _xs);
-		if (p(_x)) { return ulCons(_x, ulFilter(p, _xs)); }
-		else       { return ulFilter(p, _xs); }
+		return p(_x) ? ulCons(_x, ulFilter(p, _xs))
+					 : ulFilter(p, _xs);
 	}
 }
 
@@ -212,8 +212,8 @@ function ulAppendFilter(@p, @xs, @acc) {
 	else             {
 		var _x, _xs;
 		xs(_x, _xs);
-		if (p(_x)) { return ulCons(_x, ulAppendFilter(p, _xs, acc)); }
-		else       { return ulAppendFilter(p, _xs, acc); }
+		return p(_x) ? ulCons(_x, ulAppendFilter(p, _xs, acc))
+					 : ulAppendFilter(p, _xs, acc);
 	}
 }
 
