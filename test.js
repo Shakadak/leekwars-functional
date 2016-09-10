@@ -197,6 +197,8 @@ var aapp = aApply(afs)(aBig);
 stopOp("var aapp = aApply(afs)(aBig);");
 debug(aapp);
 
+
+debug("lfs: " + lToArray(lfs));
 debug("lBig: " + lToArray(lBig));
 debug("aBig: " + aBig);
 
@@ -217,3 +219,25 @@ debug(ai);
 
 debug("lBig: " + lToArray(lBig));
 debug("aBig: " + aBig);
+
+debug("\n--- AppendMap tests ---");
+startOp();
+var lam = ulAppendMap(diff1, lBig, lSmall);
+stopOp("var lam = ulAppendMap((!=1), lBig, lSmall);");
+startOp();
+debug(lToArray(lam));
+stopOp("debug(lToArray(lam));");
+
+debug("lSmall: " + lToArray(lSmall));
+debug("lBig: " + lToArray(lBig));
+
+debug("\n--- AppendFilter tests ---");
+startOp();
+var laf = ulAppendFilter(diff1, lBig, lSmall);
+stopOp("var laf = ulAppendFilter((!=1), lBig, lSmall);");
+startOp();
+debug(lToArray(laf));
+stopOp("debug(lToArray(laf));");
+
+debug("lSmall: " + lToArray(lSmall));
+debug("lBig: " + lToArray(lBig));

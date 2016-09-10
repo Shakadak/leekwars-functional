@@ -172,12 +172,7 @@ function lApply(@fs) { return function(@xs) {
 * ulApply : (List (a -> b), List a) -> List b
 */
 function ulApply(@fs, @xs) {
-	if (fs === null) { return@ null; }
-	else             {
-		var _f, _fs;
-		fs(_f, _fs);
-		return ulAppendMap(_f, xs, ulApply(_fs, xs));
-	}
+	return _ulApply(@fs, xs);
 }
 
 function _ulApply(@_fs, @_xs) {
@@ -218,19 +213,23 @@ function _ulAppend(@_xs, @ys) {
 * lFilter : (a -> Bool) -> List a -> List a
 */
 function lFilter(@p) { return function (@xs) {
-	return ulFilter(p, xs);
+	return _ulFilter(p, @xs);
 };}
 
 /**
 * ulFilter : ((a -> Bool), List a) -> List a
 */
 function ulFilter(@p, @xs){
-	if (xs === null) { return@ xs; }
-	else             {
-		var _x, _xs;
-		xs(_x, _xs);
-		return p(_x) ? @function(@x_, @xs_) { x_ =@ _x; xs_ = ulFilter(p, _xs); }
-					 : 										  ulFilter(p, _xs);
+	return _ulFilter(p, @xs);
+}
+
+function _ulFilter(@p, @_xs){
+	if (_xs === null) { return@ null; }
+	else			  {
+		var _x;
+		_xs(_x, _xs);
+		return p(_x) ? @function(@x_, @xs_) { x_ =@ _x; xs_ = _ulFilter(p, _xs); }
+					 : 										  _ulFilter(p, _xs);
 		/*return p(_x) ? ulCons(_x, ulFilter(p, _xs))
 					 : ulFilter(p, _xs);*/
 	}
