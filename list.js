@@ -128,20 +128,28 @@ function ulConcatFilter(@p, @xss) {
 }
 
 /**
+* lConcatFilterMap : (a -> List b) -> (b -> Bool) -> List a -> List b
+*/
+function lConcatFilterMap(@f) { return function(@p) { return function(@xs) {
+	return _ulConcatFilterMap(f, p, @xs);
+};};}
+
+/**
 * ulConcatFilterMap : ((a -> List b), (b -> Bool), List a) -> List b
 */
 function ulConcatFilterMap(@f, @p, @xs) {
-	if (xs === null) { return null; }
+	return _ulConcatFilterMap(f, p, @xs);
+	/*if (xs === null) { return null; }
 	else             {
 		var _x, _xs;
 		xs(_x, _xs);
 		return _ulAppendFilter(p, f(_x), ulConcatFilterMap(f, p, _xs));
-	}
+	}*/
 }
 
 function _ulConcatFilterMap(@f, @p, @_xs) {
-	if (_xs === null) { return null; }
-	else             {
+	if (_xs === null)	{ return null; }
+	else				{
 		var _x;
 		_xs(_x, _xs);
 		return _ulAppendFilter(p, f(_x), _ulConcatFilterMap(f, p, _xs));
