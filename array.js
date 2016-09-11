@@ -34,21 +34,28 @@ function aFoldRu(@f) { return function(@b) { return function(@as) {
 * aFilter : (a -> Bool) -> Array a -> Array a
 */
 function aFilter(@p) { return function(@xs) {
-	return arrayFoldLeft(xs, function(@acc, @x){if (p(x)){push(acc, x);} return @acc;}, []);
+	return arrayFoldLeft(xs, function(@acc, @x){if (p(x)){push(acc, x);} return acc;}, []);
 };};
+
+/**
+* uaAppendFilter : ((a -> Bool), Array a, Array a) -> Array a
+*/
+function uaAppendFilter(@p, @xs, @acc) {
+	return ;
+}
 
 /**
 * aMap : (a -> b) -> Array a -> Array b
 */
 function aMap(@f){ return function(@xs) {
-	return arrayFoldLeft(xs, function(@acc, @x){push(acc, f(x));return @acc;}, []);
+	return arrayFoldLeft(xs, function(@acc, @x){push(acc, f(x)); return acc;}, []);
 };};
 
 /**
 * aConcatMap : (a -> Array b) -> Array a -> Array b
 */
 function aConcatMap(@f) { return function(@xs) {
-	return arrayFoldLeft(xs, function(@acc, @x){acc += f(x); return @acc;}, []);
+	return arrayFoldLeft(xs, function(@acc, @x){acc += f(x); return acc;}, []);
 };}
 
 /**
@@ -65,7 +72,7 @@ function aAppend(@xs) {return function(@ys) {
 	var ret = [];
 	ret += xs;
 	ret += ys;
-	return @ret;
+	return ret;
 };}
 
 /**
@@ -76,15 +83,15 @@ function aApply(@fs) { return function(@xs) {
 	arrayFoldLeft(fs
 				, function(@_, @f){ arrayFoldLeft(xs, function(@__, @x){push(ret, f(x));}, null);}
 				, null);
-	return @ret;
+	return ret;
 };}
 
 /**
 * aIntersection : Array a -> Array a -> Array a
 */
 function aIntersection(@xs) { return function(@ys) {
-    if (count(ys) < count(xs)) {return aIntersection(ys)(xs);}
-	var tmp = arrayFoldLeft(xs, function(@acc, @x) {acc["" + x] = true; return @acc;}, []);
+    if (count(ys) < count(xs)) { return aIntersection(ys)(xs); }
+	var tmp =@ arrayFoldLeft(xs, function(@acc, @x) { acc["" + x] = true; return acc; }, []);
 	return aFilter(function(@y){return tmp["" + y];})(ys);
 };}
 
@@ -92,8 +99,13 @@ function aIntersection(@xs) { return function(@ys) {
 * aRelativeComplement : Array a -> Array a -> Array a
 */
 function aRelativeComplement(@xs) { return function(@ys) {
-    var tmp = arrayFoldLeft(ys, function(@acc, @y) {acc["" + y] = true; return @acc;}, []);
+    var tmp =@ arrayFoldLeft(ys, function(@acc, @y) { acc["" + y] = true; return acc; }, []);
 	return aFilter(function(@x){return !tmp["" + x];})(xs);
+};}
+
+function aUnion(@xs) { return function(@ys) {
+	var tmp =@ arrayFoldLeft(xs, function(@acc, @x) { acc["" + x] = true; return acc; }, []);
+	return aAppend(xs)(aFilter(function(@y){return !tmp["" + y];})(ys));
 };}
 
 /**
@@ -122,7 +134,7 @@ function getKeys(xs) {
     for (var k : var x in xs) {
         push(ks, k);
     }
-    return @ks;
+    return ks;
 }
 
 /**
@@ -137,12 +149,12 @@ function pairKV(@k) { return function(@v) {
 */
 function assocInsert(@k) { return function(@v) { return function(@xs) {
     xs["" + k] = v;
-    return @xs;
+    return xs;
 };};}
 
 /**
 * assocLookup : Assoc String b -> a -> b
 */
 function assocLookup(@xs) { return function(@k) {
-    return @xs["" + k];
+    return xs["" + k];
 };}

@@ -38,16 +38,17 @@ stopOp("lTail(null);");
 debug("lSmall: " + lToArray(lSmall));
 
 debug("\n--- Filter tests ---");
-var diff1 = function(x){return @(x != 1);};
+var diff1 = function(x){return x != 1;};
+var lLong = lAppend(lBig)(lBig);
 
 startOp();
-var lfi = lFilter(diff1)(lBig);
+var lfi =@ lFilter(diff1)(lBig);
 stopOp("var lfi = lFilter((!=1))(lBig);");
 startOp();
 debug(lToArray(lfi));
 stopOp("debug(lToArray(lfi));");
 startOp();
-var afi = aFilter(diff1)(aBig);
+var afi =@ aFilter(diff1)(aBig);
 stopOp("var afi = aFilter((!=1))(aBig);");
 debug(afi);
 
@@ -56,13 +57,13 @@ debug("aBig: " + aBig);
 
 debug("\n--- Map tests ---");
 startOp();
-var lm = lMap(diff1)(lBig);
+var lm =@ lMap(diff1)(lBig);
 stopOp("var lm = lMap((!=1))(lBig);");
 startOp();
 debug(lToArray(lm));
 stopOp("debug(lToArray(lm));");
 startOp();
-var am = aMap(diff1)(aBig);
+var am =@ aMap(diff1)(aBig);
 stopOp("var am = aMap((!=1))(aBig);");
 debug(am);
 
@@ -108,7 +109,7 @@ startOp();
 debug(lToArray(la));
 stopOp("debug(lToArray(la));");
 startOp();
-var aa = aAppend(aBig)(aSmall);
+var aa =@ aAppend(aBig)(aSmall);
 stopOp("var aa = aAppend(aBig)(aSmall); ...");
 debug(aa);
 
@@ -130,7 +131,7 @@ startOp();
 debug("lc: " + lToArray(lc));
 stopOp("debug(\"lc: \" + lToArray(lc));");
 startOp();
-var ac = aConcat(aBigSmall);
+var ac =@ aConcat(aBigSmall);
 stopOp("var ac = aConcat(aBigSmall);");
 debug("ac: " + ac);
 
@@ -162,19 +163,19 @@ debug("aBig: " + aBig);
 
 debug("\n--- ConcatMap test ---");
 
-var acm1 = [111,222,333];
+var acm1 =@ [111,222,333];
 var lcm1 = lFromArray(acm1);
 var lret111222333 = function(@a){return @lcm1;};
 var aret111222333 = function(@a){return @acm1;};
 
 startOp();
-var lcm = lConcatMap(lret111222333)(lBig);
+var lcm =@ lConcatMap(lret111222333)(lBig);
 stopOp("var lcm = lConcatMap(lret111222333)(lBig);");
 startOp();
 debug(lToArray(lcm));
 stopOp("debug(lToArray(lcm));");
 startOp();
-var acm = aConcatMap(aret111222333)(aBig);
+var acm =@ aConcatMap(aret111222333)(aBig);
 stopOp("var acm = aConcatMap(aret111222333)(aBig);");
 debug(acm);
 
@@ -187,13 +188,13 @@ var lfs = lFromArray(afs);
 debug("var fs = [add(0), add(1), add(100)];");
 
 startOp();
-var lapp = lApply(lfs)(lBig);
+var lapp =@ lApply(lfs)(lBig);
 stopOp("var lapp = lApply(lfs)(lBig);");
 startOp();
 debug(lToArray(lapp));
 stopOp("debug(lToArray(lapp));");
 startOp();
-var aapp = aApply(afs)(aBig);
+var aapp =@ aApply(afs)(aBig);
 stopOp("var aapp = aApply(afs)(aBig);");
 debug(aapp);
 
@@ -204,7 +205,7 @@ debug("aBig: " + aBig);
 
 debug("\n--- aRelativeComplement tests ---");
 startOp();
-var arc = aRelativeComplement(aBig)(aSmall);
+var arc =@ aRelativeComplement(aBig)(aSmall);
 stopOp("var arc = aRelativeComplement(aBig)(aSmall);");
 debug(arc);
 
@@ -213,7 +214,7 @@ debug("aBig: " + aBig);
 
 debug("\n--- aIntersection tests ---");
 startOp();
-var ai = aIntersection(aBig)(aSmall);
+var ai =@ aIntersection(aBig)(aSmall);
 stopOp("var ai = aIntersection(aBig)(aSmall);");
 debug(ai);
 
@@ -233,11 +234,22 @@ debug("lBig: " + lToArray(lBig));
 
 debug("\n--- AppendFilter tests ---");
 startOp();
-var laf = ulAppendFilter(diff1, lBig, lSmall);
+var laf = lAppendFilter(diff1)(lBig)(lSmall);
 stopOp("var laf = ulAppendFilter((!=1), lBig, lSmall);");
 startOp();
 debug(lToArray(laf));
 stopOp("debug(lToArray(laf));");
+
+debug("lSmall: " + lToArray(lSmall));
+debug("lBig: " + lToArray(lBig));
+
+debug("\n--- ConcatFilterMap tests ---");
+startOp();
+var lcfm = ulConcatFilterMap(lret111222333, diff1, lBig);
+stopOp("var lcfm = lConcatFilterMap(lret111222333, diff1, lBig);");
+startOp();
+debug(lToArray(lcfm));
+stopOp("debug(lToArray(lcfm));");
 
 debug("lSmall: " + lToArray(lSmall));
 debug("lBig: " + lToArray(lBig));
