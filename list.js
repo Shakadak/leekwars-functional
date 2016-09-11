@@ -16,7 +16,7 @@ function lFoldL(@f){ return@ function(@b) { return@ function(@as) {
 		xs(x, xs);
 		acc =@ f(acc)(x);
 	}
-	return @acc;
+	return acc;
 };};}
 
 /**
@@ -28,7 +28,7 @@ function lFoldLu(@f){ return@ function(@b) { return@ function(@as) {
 		xs(x, xs);
 		acc =@ f(acc, x);
 	}
-	return@ acc;
+	return acc;
 };};}
 
 /**
@@ -99,12 +99,6 @@ function ulAppendMap(@f, @xs, @acc) {
 function _ulAppendMap(@f, @_xs, @acc) {
 	return _xs === null	? acc
 						: function(@x_, @xs_) { _xs(x_, _xs); x_ =@ f(x_); xs_ =@ _ulAppendMap(f, _xs, acc); };
-	/*if (_xs === null) { return@ acc; }
-	else             {
-		var _x;
-		_xs(_x, _xs);
-		return@ function(@x_, @xs_) { x_ = f(_x); xs_ = _ulAppendMap(f, _xs, acc); };
-	}*/
 }
 
 /**
@@ -155,7 +149,7 @@ function _ulConcatFilterMap(@f, @p, @_xs) {
 }
 
 /**
-* ulConcatMapFilter : ((b -> Bool), (a -> List b), List a) -> List b
+* ulConcatMapFilter : ((a -> Bool), (a -> List b), List a) -> List b
 */
 function ulConcatMapFilter(@p, @f, @xs) {
 	if (xs === null) { return null; }
@@ -244,8 +238,7 @@ function lAppendFilter(@p) { return function(@xs) {return function(@acc){
 * ulAppendFilter : ((a -> Bool), List a, List a) -> List a
 */
 function ulAppendFilter(@p, @xs, @acc) {
-	var ret = _ulAppendFilter(p, @xs, acc);
-	return ret;
+	return _ulAppendFilter(p, @xs, acc);
 }
 
 function _ulAppendFilter(@p, @_xs, @acc) {
@@ -261,7 +254,7 @@ function _ulAppendFilter(@p, @_xs, @acc) {
 /**
 * lIter : (a -> ()) -> List a -> ()
 */
-function lIter(@f) { return@ function(@xs) {
+function lIter(@f) { return function(@xs) {
 	ulIter(f, xs);
 };}
 

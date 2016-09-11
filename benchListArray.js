@@ -1,7 +1,7 @@
 include("debug");
-include("array");
-include("math");
-include("lists");
+include("array.js");
+include("math.js");
+include("list.js");
 
 if (getTurn() !== 1) {return ;}
 
@@ -72,7 +72,7 @@ debug("aBig: " + aBig);
 
 debug("\n--- FoldL tests ---");
 startOp();
-var lfl = lFoldL(add)(0)(lBig);
+var lfl =@ lFoldL(add)(0)(lBig);
 stopOp("var lfl = lFoldL(add)(0)(lBig);");
 debug(lfl);
 startOp();

@@ -1,5 +1,5 @@
-include("functional");
-include("bool");
+include("functional.js");
+include("bool.js");
 
 
 /**
