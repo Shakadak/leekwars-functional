@@ -10,7 +10,7 @@
 /**
 * lFoldL : (b -> a -> b) -> b -> List a -> b
 */
-function lFoldL(@f){ return@ function(@b) { return@ function(@as) {
+function lFoldL(@f){ return function(@b) { return function(@as) {
 	var acc =@ b, x, xs =@ as;
 	while (xs !== null) {
 		xs(x, xs);
@@ -22,7 +22,7 @@ function lFoldL(@f){ return@ function(@b) { return@ function(@as) {
 /**
 * lFoldLu : ((b, a) -> b) -> b -> List a -> b
 */
-function lFoldLu(@f){ return@ function(@b) { return@ function(@as) {
+function lFoldLu(@f){ return function(@b) { return function(@as) {
 	var acc =@ b, x, xs =@ as;
 	while (xs !== null) {
 		xs(x, xs);
@@ -34,7 +34,7 @@ function lFoldLu(@f){ return@ function(@b) { return@ function(@as) {
 /**
 * lFoldR : (a -> b -> b) -> b -> List a -> b
 */
-function lFoldR(@f) { return@ function(@b) { return@ function(@as) {
+function lFoldR(@f) { return function(@b) { return function(@as) {
 	return _ulFoldR(f, b, @as);
 };};}
 
@@ -46,7 +46,7 @@ function ulFoldR(@f, @b, @as) {
 }
 
 function _ulFoldR(@f, @b, @xs) {
-	if (xs === null) { return@ b; }
+	if (xs === null) { return b; }
 	else             {
 		var x;
 		xs(x, xs);
@@ -73,7 +73,7 @@ function _ulFoldRu(@f, @b, @_xs) {
 /**
 * lMap : (a -> b) -> List a -> List b
 */
-function lMap(@f) { return@ function (@xs) {
+function lMap(@f) { return function (@xs) {
 	return _ulMap(f, xs);
 };}
 
@@ -277,7 +277,7 @@ function lTail(@l) {
 /**
 * augment : ((a -> b -> b) -> b -> b) -> List a -> List a
 */
-function augment(@f) { return@ function(@xs) {
+function augment(@f) { return function(@xs) {
 	return f(lCons)(xs);
 };}
 
@@ -390,14 +390,13 @@ function lFromArray(@xs){
 * lToArray : List a -> Array a
 */
 function lToArray(@l){
-	return ulFoldRu(function(@x, @acc) {unshift(acc, x); return acc;}, [], l);
-	/*var x, xs =@ l;
+	var x, xs =@ l;
 	var ret = [];
 	while (xs !== null) {
 		xs(x, xs);
 		push(ret, x);
 	}
-	return ret;*/
+	return ret;
 }
 
 /**

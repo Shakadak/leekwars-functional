@@ -48,6 +48,10 @@ startOp();
 debug(lToArray(lfi));
 stopOp("debug(lToArray(lfi));");
 startOp();
+debug(lToArray(lfi));
+stopOp("debug(lToArray(lfi));");
+debug("second check: " + lToArray(lfi));
+startOp();
 var afi =@ aFilter(diff1)(aBig);
 stopOp("var afi = aFilter((!=1))(aBig);");
 debug(afi);
@@ -63,6 +67,11 @@ startOp();
 debug(lToArray(lm));
 stopOp("debug(lToArray(lm));");
 startOp();
+debug(lToArray(lm));
+stopOp("debug(lToArray(lm));");
+debug("2nd check: " + lToArray(lm));
+debug("3rd check: " + lToArray(lm));
+startOp();
 var am =@ aMap(diff1)(aBig);
 stopOp("var am = aMap((!=1))(aBig);");
 debug(am);
@@ -72,8 +81,8 @@ debug("aBig: " + aBig);
 
 debug("\n--- FoldL tests ---");
 startOp();
-var lfl =@ lFoldL(add)(0)(lBig);
-stopOp("var lfl = lFoldL(add)(0)(lBig);");
+var lfl =@ lFoldL(add)(0)(lfi);
+stopOp("var lfl = lFoldL(add)(0)(lfi);");
 debug(lfl);
 startOp();
 var afl = aFoldL(add)(0)(aBig);
@@ -109,6 +118,10 @@ startOp();
 debug(lToArray(la));
 stopOp("debug(lToArray(la));");
 startOp();
+debug(lToArray(la));
+stopOp("debug(lToArray(la));");
+debug("second check: " + lToArray(la));
+startOp();
 var aa =@ aAppend(aBig)(aSmall);
 stopOp("var aa = aAppend(aBig)(aSmall); ...");
 debug(aa);
@@ -128,8 +141,9 @@ startOp();
 var lc = lConcat(lBigSmall);
 stopOp("var lc = lConcat(lBigSmall);");
 startOp();
-debug("lc: " + lToArray(lc));
-stopOp("debug(\"lc: \" + lToArray(lc));");
+debug(lToArray(lc));
+stopOp("debug(lToArray(lc));");
+debug("second check: " + lToArray(lc));
 startOp();
 var ac =@ aConcat(aBigSmall);
 stopOp("var ac = aConcat(aBigSmall);");
@@ -174,6 +188,7 @@ stopOp("var lcm = lConcatMap(lret111222333)(lBig);");
 startOp();
 debug(lToArray(lcm));
 stopOp("debug(lToArray(lcm));");
+debug("second check: " + lToArray(lcm));
 startOp();
 var acm =@ aConcatMap(aret111222333)(aBig);
 stopOp("var acm = aConcatMap(aret111222333)(aBig);");
@@ -193,6 +208,7 @@ stopOp("var lapp = lApply(lfs)(lBig);");
 startOp();
 debug(lToArray(lapp));
 stopOp("debug(lToArray(lapp));");
+debug("second check: " + lToArray(lapp));
 startOp();
 var aapp =@ aApply(afs)(aBig);
 stopOp("var aapp = aApply(afs)(aBig);");
@@ -228,9 +244,18 @@ stopOp("var lam = ulAppendMap((!=1), lBig, lSmall);");
 startOp();
 debug(lToArray(lam));
 stopOp("debug(lToArray(lam));");
+debug("second check: " + lToArray(lam));
+startOp();
+var aam =@ uaAppendMap(diff1, aBig, aSmall);
+stopOp("var aam = uaAppendMap((!=1), aBig, aSmall);");
+startOp();
+debug(aMap(id)(aam));
+stopOp("debug(aMap(id)(aam));");
 
 debug("lSmall: " + lToArray(lSmall));
 debug("lBig: " + lToArray(lBig));
+debug("lSmall: " + (aSmall));
+debug("lBig: " + (aBig));
 
 debug("\n--- AppendFilter tests ---");
 startOp();
@@ -239,17 +264,65 @@ stopOp("var laf = ulAppendFilter((!=1), lBig, lSmall);");
 startOp();
 debug(lToArray(laf));
 stopOp("debug(lToArray(laf));");
+debug("second check: " + lToArray(laf));
+startOp();
+var aaf =@ aAppendFilter(diff1)(aBig)(aSmall);
+stopOp("var aaf = uaAppendFilter((!=1))(aBig)(aSmall);");
+startOp();
+debug(aMap(id)(aaf));
+stopOp("debug(aMap(id)(aaf));");
 
 debug("lSmall: " + lToArray(lSmall));
 debug("lBig: " + lToArray(lBig));
+debug("lSmall: " + (aSmall));
+debug("lBig: " + (aBig));
 
 debug("\n--- ConcatFilterMap tests ---");
+function getLNeighbors(@cell) {
+	var ret = null;
+    var x = getCellX(cell);
+    var y = getCellY(cell);
+    var c1 = getCellFromXY(x + 1, y);
+    var c2 = getCellFromXY(x - 1, y);
+    var c3 = getCellFromXY(x, y + 1);
+    var c4 = getCellFromXY(x, y - 1);
+    if (c1 !== null) {ret = ulSafeTailCons(c1, ret);}
+    if (c2 !== null) {ret = ulSafeTailCons(c2, ret);}
+    if (c3 !== null) {ret = ulSafeTailCons(c3, ret);}
+    if (c4 !== null) {ret = ulSafeTailCons(c4, ret);}
+	return ret;
+}
+function getANeighbors(@cell) {
+	var ret = [];
+    var x = getCellX(cell);
+    var y = getCellY(cell);
+    var c1 = getCellFromXY(x + 1, y);
+    var c2 = getCellFromXY(x - 1, y);
+    var c3 = getCellFromXY(x, y + 1);
+    var c4 = getCellFromXY(x, y - 1);
+    if (c1 !== null) { push(ret, c1); }
+    if (c2 !== null) { push(ret, c2); }
+    if (c3 !== null) { push(ret, c3); }
+    if (c4 !== null) { push(ret, c4); }
+	return ret;
+}
+
 startOp();
-var lcfm = ulConcatFilterMap(lret111222333, diff1, lBig);
-stopOp("var lcfm = lConcatFilterMap(lret111222333, diff1, lBig);");
+var lcfm = ulConcatFilterMap(getLNeighbors, diff1, lBig);
+stopOp("var lcfm = ulConcatFilterMap(getLNeighbors, diff1, lBig);");
 startOp();
 debug(lToArray(lcfm));
 stopOp("debug(lToArray(lcfm));");
+startOp();
+debug(lToArray(lcfm));
+stopOp("debug(lToArray(lcfm));");
+debug("2nd check: " + lToArray(lcfm));
+debug("3rd check: " + lToArray(lcfm));
+var acfm = aConcatFilterMap(getANeighbors)(diff1)(aBig);
+stopOp("var acfm = aConcatFilterMap(getLNeighbors)(diff1)(aBig);");
+startOp();
+debug(aMap(id)(acfm));
+stopOp("debug(aMap(id)(acfm));");
 
 debug("lSmall: " + lToArray(lSmall));
 debug("lBig: " + lToArray(lBig));

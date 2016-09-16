@@ -7,14 +7,14 @@ include("bool.js");
 */
 function aFoldL(@f) { return function(@b) { return function(@as) {
 	return arrayFoldLeft(as, uncurry2(f), b);
-};};};
+};};}
 
 /**
 * aFoldLu : ((b, a) -> b) -> b -> Array a -> b
 */
 function aFoldLu(@f) { return function(@b) { return function(@as) {
 	return arrayFoldLeft(as, f, b);
-};};};
+};};}
 
 /**
 * aFoldR : (a -> b -> b) -> b -> Array a -> b
@@ -35,21 +35,50 @@ function aFoldRu(@f) { return function(@b) { return function(@as) {
 */
 function aFilter(@p) { return function(@xs) {
 	return arrayFoldLeft(xs, function(@acc, @x){if (p(x)){push(acc, x);} return acc;}, []);
-};};
+};}
+
+/**
+* aAppendFilter : ((a -> Bool), Array a, Array a) -> Array a
+*/
+function aAppendFilter(@p) { return function(@xs) { return function(@ys) {
+	var ret =@ arrayFoldLeft(xs, function(@acc, @x){if (p(x)){push(acc, x);} return acc;}, []);
+	ret += ys;
+	return ret;
+};};}
 
 /**
 * uaAppendFilter : ((a -> Bool), Array a, Array a) -> Array a
 */
-function uaAppendFilter(@p, @xs, @acc) {
-	return ;
+function uaAppendFilter(@p, @xs, @ys) {
+	var ret =@ arrayFoldLeft(xs, function(@acc, @x){if (p(x)){push(acc, x);} return acc;}, []);
+	ret += ys;
+	return ret;
 }
 
 /**
 * aMap : (a -> b) -> Array a -> Array b
 */
-function aMap(@f){ return function(@xs) {
+function aMap(@f) { return function(@xs) {
 	return arrayFoldLeft(xs, function(@acc, @x){push(acc, f(x)); return acc;}, []);
-};};
+};}
+
+/**
+* aAppendMap : ((a -> b), Array a, Array b) -> Array b
+*/
+function aAppendMap(@f) { return function(@xs) { return function(@ys) {
+	var ret =@ arrayFoldLeft(xs, function(@acc, @x){push(acc, f(x)); return acc;}, []);
+	ret += ys;
+	return ret;
+};};}
+
+/**
+* uaAppendMap : ((a -> b), Array a, Array b) -> Array b
+*/
+function uaAppendMap(@f, @xs, @ys) {
+	var ret =@ arrayFoldLeft(xs, function(@acc, @x){push(acc, f(x)); return acc;}, []);
+	ret += ys;
+	return ret;
+}
 
 /**
 * aConcatMap : (a -> Array b) -> Array a -> Array b
@@ -57,6 +86,17 @@ function aMap(@f){ return function(@xs) {
 function aConcatMap(@f) { return function(@xs) {
 	return arrayFoldLeft(xs, function(@acc, @x){acc += f(x); return acc;}, []);
 };}
+
+/**
+*
+*/
+function aConcatFilterMap(@f) { return function(@p) { return function(@xs) {
+	var ret = [];
+	arrayFoldLeft(xs
+				, function(@_, x){arrayFoldLeft(f(x), function(@__, @y){if(p(y)){push(ret, y);}},null);}
+				, null);
+	return ret;
+};};}
 
 /**
 * aConcat : Array (Array a) -> Array a
