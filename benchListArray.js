@@ -1,7 +1,7 @@
 include("debug");
 include("array.js");
 include("math.js");
-include("test_list");
+include("list.js");
 include("functional.js");
 
 if (getTurn() !== 1) {return ;}

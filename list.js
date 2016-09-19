@@ -7,37 +7,9 @@
    You can even go and dirty your hand by direclty defining an anonymous function: `function(@xs_) {xs_ =@ list; return value;}` value and list being provided by yourself.
 */
 
-/**
-* lFoldL : (b -> a -> b) -> b -> List a -> b
-*/
-function lFoldL(@f){ return function(@acc) { return function(@xs) {
-	return _ulFoldL(f, acc, @xs);
-};};}
-
-/**
-* ulFoldL : ((b -> a -> b), b, List a) -> b
-*/
-function ulFoldL(@f, @acc, @xs) {
-	return _ulFoldL(f, acc, @xs);
-}
-
 function _ulFoldL(@f, @acc, @xs) {
 	return xs === null	? acc
 						: _ulFoldL(f, f(acc)(xs(xs)), xs);
-}
-
-/**
-* lFoldLu : ((b, a) -> b) -> b -> List a -> b
-*/
-function lFoldLu(@f){ return function(@acc) { return function(@xs) {
-	return _ulFoldLu(f, acc, @xs);
-};};}
-
-/**
-* ulFoldLu : ((b -> a -> b), b, List a) -> b
-*/
-function ulFoldLu(@f, @acc, @xs) {
-	return _ulFoldLu(f, acc, @xs);
 }
 
 function _ulFoldLu(@f, @acc, @xs) {
@@ -45,30 +17,9 @@ function _ulFoldLu(@f, @acc, @xs) {
 						: _ulFoldLu(f, f(acc, xs(xs)), xs);
 }
 
-/**
-* lFoldR : (a -> b -> b) -> b -> List a -> b
-*/
-function lFoldR(@f) { return function(@acc) { return function(@xs) {
-	return _ulFoldR(f, acc, @xs);
-};};}
-
-/**
-* ulFoldR : ((a -> b -> b), b, List a) -> b
-*/
-function ulFoldR(@f, @acc, @xs) {
-	return _ulFoldR(f, acc, @xs);
-}
-
 function _ulFoldR(@f, @acc, @xs) {
 	return xs === null	? acc
 						: f(xs(xs))(_ulFoldR(f, acc, xs));
-}
-
-/**
-* ulFoldRu : (((a, b) -> b), b, List a) -> b
-*/
-function ulFoldRu(@f, @acc, @xs) {
-	return _ulFoldRu(f, acc, @xs);
 }
 
 function _ulFoldRu(@f, @acc, @xs) {
@@ -76,30 +27,9 @@ function _ulFoldRu(@f, @acc, @xs) {
 						: f(xs(xs), _ulFoldRu(f, acc, xs));
 }
 
-/**
-* lMap : (a -> b) -> List a -> List b
-*/
-function lMap(@f) { return function (@xs) {
-	return _ulMap(f, @xs);
-};}
-
-/**
-* ulMap : ((a -> b), List a) -> List b
-*/
-function ulMap(@f, @xs) {
-	return _ulMap(f, @xs);
-}
-
 function _ulMap(@f, @xs) {
 	return xs === null	? null
 						: ulCons(f(xs(xs)), _ulMap(f, xs));
-}
-
-/**
-* ulAppendMap : ((a -> b), List a, List b) -> List b
-*/
-function ulAppendMap(@f, @xs, @acc) {
-	return _ulAppendMap(f, @xs, acc);
 }
 
 function _ulAppendMap(@f, @xs, @acc) {
@@ -121,42 +51,14 @@ function lConcatMap(@f) { return function(@xs) {
 	return ulFoldRu(function(@x, @acc){return ulAppend(f(x), acc);}, null, xs);
 };}
 
-/**
-* ulConcatFilter : ((a -> Bool), List (List a)) -> List a
-*/
-function ulConcatFilter(@p, @xss) {
-	return _ulConcatFilter(p, @xss);
-}
-
 function _ulConcatFilter(@p, @xss) {
 	return xss === null	? null
 						: ulAppendFilter(p, xss(xss), _ulConcatFilter(p, xss));
 }
 
-/**
-* lConcatFilterMap : (a -> List b) -> (b -> Bool) -> List a -> List b
-*/
-function lConcatFilterMap(@f) { return function(@p) { return function(@xs) {
-return _ulConcatFilterMap(f, p, @xs);
-};};}
-
-/**
-* ulConcatFilterMap : ((a -> List b), (b -> Bool), List a) -> List b
-*/
-function ulConcatFilterMap(@f, @p, @xs) {
-	return _ulConcatFilterMap(f, p, @xs);
-}
-
 function _ulConcatFilterMap(@f, @p, @xs) {
 	return xs === null	? null
 						: _ulAppendFilter(p, @f(xs(xs)), _ulConcatFilterMap(f, p, xs));
-}
-
-/**
-* ulConcatMapFilter : ((a -> Bool), (a -> List b), List a) -> List b
-*/
-function ulConcatMapFilter(@p, @f, @xs) {
-	return _ulConcatMapFilter(p, f, @xs);
 }
 
 function _ulConcatMapFilter(@p, @f, @xs) {
@@ -168,53 +70,14 @@ function _ulConcatMapFilter(@p, @f, @xs) {
 	}
 }
 
-/**
-* lApply : List (a -> b) -> List a -> List b
-*/
-function lApply(@fs) { return function(@xs) {
-	return ulApply(fs, xs);
-};}
-
-/**
-* ulApply : (List (a -> b), List a) -> List b
-*/
-function ulApply(@fs, @xs) {
-	var _fs;
+function _ulApply(@fs, @xs) {
 	return fs === null	? null
-						: ulAppendMap(fs(_fs), xs, ulApply(_fs, xs));
-}
-
-/**
-* lAppend : List a -> List a -> List a
-*/
-function lAppend(@xs) { return function(@ys) {
-		return _ulAppend(@xs, ys);
-};}
-
-/**
-* ulAppend : (List a, List a) -> List a
-*/
-function ulAppend(@xs, @ys) {
-	return _ulAppend(@xs, ys);
+						: _ulAppendMap(fs(fs), @xs, _ulApply(fs, xs));
 }
 
 function _ulAppend(@xs, @ys) {
 	return xs === null	? ys
 						: ulCons(xs(xs), _ulAppend(xs, ys));
-}
-
-/**
-* lFilter : (a -> Bool) -> List a -> List a
-*/
-function lFilter(@p) { return function (@xs) {
-	return _ulFilter(p, @xs);
-};}
-
-/**
-* ulFilter : ((a -> Bool), List a) -> List a
-*/
-function ulFilter(@p, @xs) {
-	return _ulFilter(p, @xs);
 }
 
 function _ulFilter(@p, @xs) {
@@ -226,20 +89,6 @@ function _ulFilter(@p, @xs) {
 	}
 }
 
-/**
-* lAppendFilter : (a -> Bool) -> List a -> List a -> List a
-*/
-function lAppendFilter(@p) { return function(@xs) {return function(@acc){
-	return _ulAppendFilter(p, @xs, acc);
-};};}
-
-/**
-* ulAppendFilter : ((a -> Bool), List a, List a) -> List a
-*/
-function ulAppendFilter(@p, @xs, @acc) {
-	return _ulAppendFilter(p, @xs, acc);
-}
-
 function _ulAppendFilter(@p, @xs, @acc) {
 	if (xs === null)	{ return acc; }
 	else				{
@@ -248,13 +97,6 @@ function _ulAppendFilter(@p, @xs, @acc) {
                     :           _ulAppendFilter(p, xs, acc);
 	}
 }
-
-/**
-* lIter : (a -> ()) -> List a -> ()
-*/
-function lIter(@f) { return function(@xs) {
-	ulIter(f, xs);
-};}
 
 /**
 * ulIter : ((a -> ()), List a) -> ()
@@ -430,4 +272,165 @@ function lToArray(@l){
 function lToString(@l) {
 	var toString = function(@x, @xs) { return@ ("ulCons(" + x + ", " + xs + ")"); };
 	return ulFoldRu(toString, null, @l);
+}
+
+/**
+* lFoldL : (b -> a -> b) -> b -> List a -> b
+*/
+function lFoldL(@f){ return function(@acc) { return function(@xs) {
+	return _ulFoldL(f, acc, @xs);
+};};}
+
+/**
+* ulFoldL : ((b -> a -> b), b, List a) -> b
+*/
+function ulFoldL(@f, @acc, @xs) {
+	return _ulFoldL(f, acc, @xs);
+}
+
+/**
+* lFoldLu : ((b, a) -> b) -> b -> List a -> b
+*/
+function lFoldLu(@f){ return function(@acc) { return function(@xs) {
+	return _ulFoldLu(f, acc, @xs);
+};};}
+
+/**
+* ulFoldLu : ((b -> a -> b), b, List a) -> b
+*/
+function ulFoldLu(@f, @acc, @xs) {
+	return _ulFoldLu(f, acc, @xs);
+}
+
+/**
+* lFoldR : (a -> b -> b) -> b -> List a -> b
+*/
+function lFoldR(@f) { return function(@acc) { return function(@xs) {
+	return _ulFoldR(f, acc, @xs);
+};};}
+
+/**
+* ulFoldR : ((a -> b -> b), b, List a) -> b
+*/
+function ulFoldR(@f, @acc, @xs) {
+	return _ulFoldR(f, acc, @xs);
+}
+
+/**
+* ulFoldRu : (((a, b) -> b), b, List a) -> b
+*/
+function ulFoldRu(@f, @acc, @xs) {
+	return _ulFoldRu(f, acc, @xs);
+}
+
+/**
+* lMap : (a -> b) -> List a -> List b
+*/
+function lMap(@f) { return function (@xs) {
+	return _ulMap(f, @xs);
+};}
+
+/**
+* ulMap : ((a -> b), List a) -> List b
+*/
+function ulMap(@f, @xs) {
+	return _ulMap(f, @xs);
+}
+
+/**
+* ulAppendMap : ((a -> b), List a, List b) -> List b
+*/
+function ulAppendMap(@f, @xs, @acc) {
+	return _ulAppendMap(f, @xs, acc);
+}
+
+/**
+* ulConcatFilter : ((a -> Bool), List (List a)) -> List a
+*/
+function ulConcatFilter(@p, @xss) {
+	return _ulConcatFilter(p, @xss);
+}
+
+/**
+* lConcatFilterMap : (a -> List b) -> (b -> Bool) -> List a -> List b
+*/
+function lConcatFilterMap(@f) { return function(@p) { return function(@xs) {
+return _ulConcatFilterMap(f, p, @xs);
+};};}
+
+/**
+* ulConcatFilterMap : ((a -> List b), (b -> Bool), List a) -> List b
+*/
+function ulConcatFilterMap(@f, @p, @xs) {
+	return _ulConcatFilterMap(f, p, @xs);
+}
+
+/**
+* ulConcatMapFilter : ((a -> Bool), (a -> List b), List a) -> List b
+*/
+function ulConcatMapFilter(@p, @f, @xs) {
+	return _ulConcatMapFilter(p, f, @xs);
+}
+
+/**
+* lAppend : List a -> List a -> List a
+*/
+function lAppend(@xs) { return function(@ys) {
+		return _ulAppend(@xs, ys);
+};}
+
+/**
+* ulAppend : (List a, List a) -> List a
+*/
+function ulAppend(@xs, @ys) {
+	return _ulAppend(@xs, ys);
+}
+
+/**
+* lFilter : (a -> Bool) -> List a -> List a
+*/
+function lFilter(@p) { return function (@xs) {
+	return _ulFilter(p, @xs);
+};}
+
+/**
+* ulFilter : ((a -> Bool), List a) -> List a
+*/
+function ulFilter(@p, @xs) {
+	return _ulFilter(p, @xs);
+}
+
+/**
+* lAppendFilter : (a -> Bool) -> List a -> List a -> List a
+*/
+function lAppendFilter(@p) { return function(@xs) {return function(@acc){
+	return _ulAppendFilter(p, @xs, acc);
+};};}
+
+/**
+* ulAppendFilter : ((a -> Bool), List a, List a) -> List a
+*/
+function ulAppendFilter(@p, @xs, @acc) {
+	return _ulAppendFilter(p, @xs, acc);
+}
+
+/**
+* lIter : (a -> ()) -> List a -> ()
+*/
+function lIter(@f) { return function(@xs) {
+	ulIter(f, xs);
+};}
+
+/**
+* lApply : List (a -> b) -> List a -> List b
+*/
+function lApply(@fs) { return function(@xs) {
+	return _ulApply(@fs, xs);
+};}
+
+/**
+* ulApply : (List (a -> b), List a) -> List b
+*/
+function ulApply(@fs, @xs) {
+	return _ulApply(@fs, xs);
 }
