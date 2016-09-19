@@ -4,156 +4,167 @@
    var xs = lSingleton(x); // xs = (1);
    x = 2; // xs = (2);
    If you are fine with this behavior, then go ahead, the gain in term of construction is pretty significant. (2op per element.) Otherwise, use the others constructors (lSafe[Tail]Cons and ulSafe[Tail]Cons) when constructing by hand.
-   You can even go and dirty your hand by direclty defining an anonymous function: `function(@x_, @xs_) {x_ =@ value; xs_ =@ list;}` value and list being provided by yourself.
+   You can even go and dirty your hand by direclty defining an anonymous function: `function(@xs_) {xs_ =@ list; return value;}` value and list being provided by yourself.
 */
 
 /**
 * lFoldL : (b -> a -> b) -> b -> List a -> b
 */
-function lFoldL(@f){ return function(@b) { return function(@as) {
-	var acc =@ b, x, xs =@ as;
-	while (xs !== null) {
-		xs(x, xs);
-		acc =@ f(acc)(x);
-	}
-	return acc;
+function lFoldL(@f){ return function(@acc) { return function(@xs) {
+	return _ulFoldL(f, acc, @xs);
 };};}
+
+/**
+* ulFoldL : ((b -> a -> b), b, List a) -> b
+*/
+function ulFoldL(@f, @acc, @xs) {
+	return _ulFoldL(f, acc, @xs);
+}
+
+function _ulFoldL(@f, @acc, @xs) {
+	return xs === null	? acc
+						: _ulFoldL(f, f(acc)(xs(xs)), xs);
+}
 
 /**
 * lFoldLu : ((b, a) -> b) -> b -> List a -> b
 */
-function lFoldLu(@f){ return function(@b) { return function(@as) {
-	var acc =@ b, x, xs =@ as;
-	while (xs !== null) {
-		xs(x, xs);
-		acc =@ f(acc, x);
-	}
-	return acc;
+function lFoldLu(@f){ return function(@acc) { return function(@xs) {
+	return _ulFoldLu(f, acc, @xs);
 };};}
+
+/**
+* ulFoldLu : ((b -> a -> b), b, List a) -> b
+*/
+function ulFoldLu(@f, @acc, @xs) {
+	return _ulFoldLu(f, acc, @xs);
+}
+
+function _ulFoldLu(@f, @acc, @xs) {
+	return xs === null	? acc
+						: _ulFoldLu(f, f(acc, xs(xs)), xs);
+}
 
 /**
 * lFoldR : (a -> b -> b) -> b -> List a -> b
 */
-function lFoldR(@f) { return function(@b) { return function(@as) {
-	return _ulFoldR(f, b, @as);
+function lFoldR(@f) { return function(@acc) { return function(@xs) {
+	return _ulFoldR(f, acc, @xs);
 };};}
 
 /**
 * ulFoldR : ((a -> b -> b), b, List a) -> b
 */
-function ulFoldR(@f, @b, @as) {
-	return _ulFoldR(f, b, @as);
+function ulFoldR(@f, @acc, @xs) {
+	return _ulFoldR(f, acc, @xs);
 }
 
-function _ulFoldR(@f, @b, @xs) {
-	if (xs === null) { return b; }
-	else             {
-		var x;
-		xs(x, xs);
-		return f(x)(_ulFoldR(f, b, xs));
-	}
+function _ulFoldR(@f, @acc, @xs) {
+	return xs === null	? acc
+						: f(xs(xs))(_ulFoldR(f, acc, xs));
 }
 
 /**
 * ulFoldRu : (((a, b) -> b), b, List a) -> b
 */
-function ulFoldRu(@f, @b, @as) {
-	return _ulFoldRu(f, b, @as);
+function ulFoldRu(@f, @acc, @xs) {
+	return _ulFoldRu(f, acc, @xs);
 }
 
-function _ulFoldRu(@f, @b, @_xs) {
-	if (_xs === null)	{ return b; }
-	else				{
-		var _x;
-		_xs(_x, _xs);
-		return f(_x, _ulFoldRu(f, b, _xs));
-	}
+function _ulFoldRu(@f, @acc, @xs) {
+	return xs === null	? acc
+						: f(xs(xs), _ulFoldRu(f, acc, xs));
 }
 
 /**
 * lMap : (a -> b) -> List a -> List b
 */
 function lMap(@f) { return function (@xs) {
-	return _ulMap(f, xs);
+	return _ulMap(f, @xs);
 };}
 
 /**
 * ulMap : ((a -> b), List a) -> List b
 */
 function ulMap(@f, @xs) {
-	return _ulMap(f, xs);
+	return _ulMap(f, @xs);
 }
 
 function _ulMap(@f, @xs) {
-	var _xs;
 	return xs === null	? null
-						: function(@x_, @xs_) { xs(x_, _xs); x_ =@ f(x_); xs_ =@ _ulMap(f, _xs); };
+						: ulCons(f(xs(xs)), _ulMap(f, xs));
 }
 
 /**
 * ulAppendMap : ((a -> b), List a, List b) -> List b
 */
 function ulAppendMap(@f, @xs, @acc) {
-	var _xs;
+	return _ulAppendMap(f, @xs, acc);
+}
+
+function _ulAppendMap(@f, @xs, @acc) {
 	return xs === null	? acc
-						: function(@x_, @xs_) { xs(x_, _xs); x_ =@ f(x_); xs_ =@ ulAppendMap(f, _xs, acc); };
+						: ulCons(f(xs(xs)), _ulAppendMap(f, xs, acc));
 }
 
 /**
 * lConcat : List (List a) -> List a
 */
 function lConcat(@xss) {
-	return _ulFoldRu(ulAppend, null, @xss);
+	return ulFoldRu(ulAppend, null, xss);
 }
 
 /**
 * lConcatMap : (a -> List b) -> List a -> List b
 */
 function lConcatMap(@f) { return function(@xs) {
-	return _ulFoldRu(function(@x, @acc){return ulAppend(f(x), acc);}, null, @xs);
+	return ulFoldRu(function(@x, @acc){return ulAppend(f(x), acc);}, null, xs);
 };}
 
 /**
 * ulConcatFilter : ((a -> Bool), List (List a)) -> List a
 */
 function ulConcatFilter(@p, @xss) {
-	if (xss === null) { return null; }
-	else              {
-		var _xs, _xss;
-		xss(_xs, _xss);
-		return ulAppendFilter(p, _xs, ulConcatFilter(p, _xss));
-	}
+	return _ulConcatFilter(p, @xss);
+}
+
+function _ulConcatFilter(@p, @xss) {
+	return xss === null	? null
+						: ulAppendFilter(p, xss(xss), _ulConcatFilter(p, xss));
 }
 
 /**
 * lConcatFilterMap : (a -> List b) -> (b -> Bool) -> List a -> List b
 */
 function lConcatFilterMap(@f) { return function(@p) { return function(@xs) {
-	return ulConcatFilterMap(f, p, xs);
+return _ulConcatFilterMap(f, p, @xs);
 };};}
 
 /**
 * ulConcatFilterMap : ((a -> List b), (b -> Bool), List a) -> List b
 */
 function ulConcatFilterMap(@f, @p, @xs) {
-	if (xs === null)	{ return null; }
-	else				{
-		var _x, _xs;
-		xs(_x, _xs);
-		return ulAppendFilter(p, f(_x), ulConcatFilterMap(f, p, _xs));
-	}
+	return _ulConcatFilterMap(f, p, @xs);
+}
+
+function _ulConcatFilterMap(@f, @p, @xs) {
+	return xs === null	? null
+						: _ulAppendFilter(p, @f(xs(xs)), _ulConcatFilterMap(f, p, xs));
 }
 
 /**
 * ulConcatMapFilter : ((a -> Bool), (a -> List b), List a) -> List b
 */
 function ulConcatMapFilter(@p, @f, @xs) {
+	return _ulConcatMapFilter(p, f, @xs);
+}
+
+function _ulConcatMapFilter(@p, @f, @xs) {
 	if (xs === null) { return null; }
 	else             {
-		var _x, _xs;
-		xs(_x, _xs);
-		return p(_x) ? ulAppendMap(p, f(_x), ulConcatMapFilter(p, f, _xs))
-					 : 						 ulConcatMapFilter(p, f, _xs);
+        var x = xs(xs);
+		return p(x) ? ulAppendMap(p, f(x), _ulConcatMapFilter(p, f, xs))
+                    :                      _ulConcatMapFilter(p, f, xs);
 	}
 }
 
@@ -168,47 +179,50 @@ function lApply(@fs) { return function(@xs) {
 * ulApply : (List (a -> b), List a) -> List b
 */
 function ulApply(@fs, @xs) {
-	if (fs === null)	{ return null; }
-	else            	{
-		var _f, _fs;
-		fs(_f, _fs);
-		return ulAppendMap(_f, xs, ulApply(_fs, xs));
-	}
+	var _fs;
+	return fs === null	? null
+						: ulAppendMap(fs(_fs), xs, ulApply(_fs, xs));
 }
 
 /**
 * lAppend : List a -> List a -> List a
 */
 function lAppend(@xs) { return function(@ys) {
-		return ulAppend(xs, ys);
+		return _ulAppend(@xs, ys);
 };}
 
 /**
 * ulAppend : (List a, List a) -> List a
 */
 function ulAppend(@xs, @ys) {
-	var _xs;
+	return _ulAppend(@xs, ys);
+}
+
+function _ulAppend(@xs, @ys) {
 	return xs === null	? ys
-						: function(@x_, @xs_) { xs(x_, _xs); xs_ =@ ulAppend(_xs, ys); };
+						: ulCons(xs(xs), _ulAppend(xs, ys));
 }
 
 /**
 * lFilter : (a -> Bool) -> List a -> List a
 */
 function lFilter(@p) { return function (@xs) {
-	return ulFilter(p, xs);
+	return _ulFilter(p, @xs);
 };}
 
 /**
 * ulFilter : ((a -> Bool), List a) -> List a
 */
 function ulFilter(@p, @xs) {
+	return _ulFilter(p, @xs);
+}
+
+function _ulFilter(@p, @xs) {
 	if (xs === null)	{ return null; }
 	else				{
-		var _x, _xs;
-		xs(_x, _xs);
-		return p(_x) ? function(@x_, @xs_) { x_ =@ _x; xs_ =@ ulFilter(p, _xs); }
-					 : 										  ulFilter(p, _xs);
+        var x = xs(xs);
+		return p(x) ? ulCons(x, _ulFilter(p, xs))
+                    :           _ulFilter(p, xs);
 	}
 }
 
@@ -216,19 +230,22 @@ function ulFilter(@p, @xs) {
 * lAppendFilter : (a -> Bool) -> List a -> List a -> List a
 */
 function lAppendFilter(@p) { return function(@xs) {return function(@acc){
-	return ulAppendFilter(p, xs, acc);
+	return _ulAppendFilter(p, @xs, acc);
 };};}
 
 /**
 * ulAppendFilter : ((a -> Bool), List a, List a) -> List a
 */
 function ulAppendFilter(@p, @xs, @acc) {
+	return _ulAppendFilter(p, @xs, acc);
+}
+
+function _ulAppendFilter(@p, @xs, @acc) {
 	if (xs === null)	{ return acc; }
 	else				{
-		var _x, _xs;
-		xs(_x, _xs);
-		return p(_x) ? function(@x_, @xs_) { x_ =@ _x; xs_ =@ ulAppendFilter(p, _xs, acc); }
-					 : 										  ulAppendFilter(p, _xs, acc);
+        var x = xs(xs);
+		return p(x) ? ulCons(x, _ulAppendFilter(p, xs, acc))
+                    :           _ulAppendFilter(p, xs, acc);
 	}
 }
 
@@ -243,10 +260,9 @@ function lIter(@f) { return function(@xs) {
 * ulIter : ((a -> ()), List a) -> ()
 */
 function ulIter(@f, @xs) {
-	var _x, _xs =@ xs;
+	var _xs =@ xs;
 	while (_xs !== null) {
-		_xs(_x, _xs);
-		f(_x);
+		f(_xs(_xs));
 	}
 }
 
@@ -256,9 +272,7 @@ function ulIter(@f, @xs) {
 function lHead(@l) {
 	if (l === null) { debugE("lHead: Empty list");}
 	else            {
-		var x;
-		l(x, null);
-		return x;
+		return l(null);
 	}
 }
 
@@ -269,7 +283,7 @@ function lTail(@l) {
 	if (l === null) { debugE("lTail: Empty list");}
 	else            {
 		var xs;
-		l(null, xs);
+		l(xs);
 		return xs;
 	}
 }
@@ -287,18 +301,24 @@ function augment(@f) { return function(@xs) {
 function build(@f) { return f(lCons)(null);}
 
 /**
+* buildu : ((((a, b) -> b), b) -> b) -> List a
+*/
+function buildu(@f) { return f(ulCons, null); }
+
+/**
 * lSingleton : a -> List a
 */
 function lSingleton(@x) {
-	return function(@x_, @xs_) { x_ =@ x; xs_ =@ null; };}
+	return function(@xs_) { xs_ =@ null; return x; };}
 
 /**
 * lSafeSingleton : a -> List a
 */
 function lSafeSingleton(@x) {
 	var _x =@ x;
-	return function(@x_, @xs_) {
-	x_ =@ _x; xs_ =@ null;
+	return function(@xs_) {
+	xs_ =@ null;
+    return x;
 };}
 
 /**
@@ -306,22 +326,22 @@ function lSafeSingleton(@x) {
 */
 function lCons(@x) {
 	return function(@xs) {
-		return function(@x_, @xs_) {
-	x_ =@ x; xs_ =@ xs;
+		return function(@xs_) {
+	xs_ =@ xs; return x;
 };};}
 
 /**
 * ulCons : (a, List a) -> List a
 */
 function ulCons(@x, @xs) {
-	return function(@x_, @xs_) { x_ =@ x; xs_ =@ xs; };
+	return function(@xs_) { xs_ =@ xs; return x; };
 }
 
 /**
 * ulSnoc : (List a, a) -> List a
 */
 function ulSnoc(@xs, @x) {
-	return function(@x_, @xs_) { x_ =@ x; xs_ =@ xs; };
+	return function(@xs_) { xs_ =@ xs; return x; };
 }
 
 /**
@@ -331,8 +351,8 @@ function lSafeCons(@x){
 	var _x =@ x;
 	return function(@xs){
 		var _xs =@ xs;
-		return function(@x_, @xs_) {
-	x_ =@ _x; xs_ =@ _xs;
+		return function(@xs_) {
+	xs_ =@ _xs; return _x;
 };};}
 
 /**
@@ -341,7 +361,7 @@ function lSafeCons(@x){
 function ulSafeCons(@x, @xs) {
 	var _x =@ x, _xs =@ xs;
 	return function(@x_, @xs_) {
-	x_ =@ _x; xs_ =@ _xs;
+	xs_ =@ _xs; return _x;
 };}
 
 /**
@@ -349,7 +369,7 @@ function ulSafeCons(@x, @xs) {
 */
 function ulSafeSnoc(@xs, @x) {
 	var _x =@ x, _xs =@ xs;
-	return function(@x_, @xs_) { x_ =@ _x; xs_ =@ _xs; };
+	return function(@xs_) { xs_ =@ _xs; return _x; };
 }
 
 /**
@@ -358,8 +378,8 @@ function ulSafeSnoc(@xs, @x) {
 function lSafeTailCons(@x){
 	return function(@xs){
 		var _xs =@ xs;
-		return function(@x_, @xs_) {
-	x_ =@ x; xs_ =@ _xs;
+		return function(@xs_) {
+	xs_ =@ _xs; return x;
 };};}
 
 /**
@@ -367,8 +387,8 @@ function lSafeTailCons(@x){
 */
 function ulSafeTailCons(@x, @xs) {
 	var _xs =@ xs;
-	return function(@x_, @xs_) {
-	x_ =@ x; xs_ =@ _xs;
+	return function(@xs_) {
+	xs_ =@ _xs; return x;
 };}
 
 /**
@@ -376,7 +396,7 @@ function ulSafeTailCons(@x, @xs) {
 */
 function ulSafeTailSnoc(@xs, @x) {
 	var _xs =@ xs;
-	return function(@x_, @xs_) { x_ =@ x; xs_ =@ _xs; };
+	return function(@xs_) { xs_ =@ _xs; return x; };
 }
 
 /**
@@ -387,16 +407,21 @@ function lFromArray(@xs){
 }
 
 /**
+* lFromKeys : Assoc a b -> List a
+*/
+function lFromKeys(@xs){
+	var ret = null;
+	for (var k : var _ in xs) {
+		ret = ulSafeTailCons(k, ret);
+	}
+	return ret;
+}
+
+/**
 * lToArray : List a -> Array a
 */
 function lToArray(@l){
-	var x, xs =@ l;
-	var ret = [];
-	while (xs !== null) {
-		xs(x, xs);
-		push(ret, x);
-	}
-	return ret;
+	return ulFoldLu(function(@acc, @x) { push(acc, x); return acc; }, [], @l);
 }
 
 /**
@@ -404,5 +429,5 @@ function lToArray(@l){
 */
 function lToString(@l) {
 	var toString = function(@x, @xs) { return@ ("ulCons(" + x + ", " + xs + ")"); };
-	return _ulFoldRu(toString, null, @l);
+	return ulFoldRu(toString, null, @l);
 }

@@ -1,17 +1,22 @@
 include("debug");
 include("array.js");
 include("math.js");
-include("list.js");
+include("test_list");
+include("functional.js");
 
 if (getTurn() !== 1) {return ;}
 
-var aSmall = [1,2,3];
-var aBig = [1,2,1,2,1,2,1,2,4,3,4,3,4,3];
+var aSmallo = [1,2,3];
+var aBigo = [1,2,1,2,1,2,1,2,4,3,4,3,4,3];
+var aSmall = aMap(id/*function(x) {return [x];}*/)(aSmallo);
+var aBig = aMap(id/*function(x) {return [x];}*/)(aBigo);
 debug("aSmall: " + aSmall);
 debug("aBig: " + aBig);
 
-var lSmall = lFromArray(aSmall);
-var lBig = lFromArray(aBig);
+var lSmallo = lFromArray(aSmall);
+var lBigo = lFromArray(aBig);
+var lSmall = lMap(id/*function(x) {return [x];}*/)(lSmallo);
+var lBig = lMap(id/*function(x) {return [x];}*/)(lBigo);
 debug("lSmall: " + lToArray(lSmall));
 debug("lBig: " + lToArray(lBig));
 
@@ -25,6 +30,7 @@ lHead(null);
 stopOp("lHead(null);");
 
 debug("lSmall: " + lToArray(lSmall));
+debug("lBig: " + lToArray(lBig));
 
 debug("\n--- Tail tests ---");
 startOp();
@@ -36,6 +42,7 @@ lTail(null);
 stopOp("lTail(null);");
 
 debug("lSmall: " + lToArray(lSmall));
+debug("lBig: " + lToArray(lBig));
 
 debug("\n--- Filter tests ---");
 var diff1 = function(x){return x != 1;};
@@ -81,8 +88,8 @@ debug("aBig: " + aBig);
 
 debug("\n--- FoldL tests ---");
 startOp();
-var lfl =@ lFoldL(add)(0)(lfi);
-stopOp("var lfl = lFoldL(add)(0)(lfi);");
+var lfl =@ lFoldL(add)(0)(lBig);
+stopOp("var lfl = lFoldL(add)(0)(lBig);");
 debug(lfl);
 startOp();
 var afl = aFoldL(add)(0)(aBig);
@@ -260,14 +267,14 @@ debug("lBig: " + (aBig));
 debug("\n--- AppendFilter tests ---");
 startOp();
 var laf = lAppendFilter(diff1)(lBig)(lSmall);
-stopOp("var laf = ulAppendFilter((!=1), lBig, lSmall);");
+stopOp("var laf = lAppendFilter(diff1)(lBig)(lSmall);");
 startOp();
 debug(lToArray(laf));
 stopOp("debug(lToArray(laf));");
 debug("second check: " + lToArray(laf));
 startOp();
 var aaf =@ aAppendFilter(diff1)(aBig)(aSmall);
-stopOp("var aaf = uaAppendFilter((!=1))(aBig)(aSmall);");
+stopOp("var aaf = aAppendFilter(diff1)(aBig)(aSmall);");
 startOp();
 debug(aMap(id)(aaf));
 stopOp("debug(aMap(id)(aaf));");
