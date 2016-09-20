@@ -48,8 +48,13 @@ function lConcat(@xss) {
 * lConcatMap : (a -> List b) -> List a -> List b
 */
 function lConcatMap(@f) { return function(@xs) {
-	return ulFoldRu(function(@x, @acc){return ulAppend(f(x), acc);}, null, xs);
+	return _ulConcatMap(f, @xs);
 };}
+
+function _ulConcatMap(@f, @xs) {
+	return xs === null	? null
+						: _ulAppend(f(xs(xs)), _ulConcatMap(f, xs));
+}
 
 function _ulConcatFilter(@p, @xss) {
 	return xss === null	? null
@@ -65,8 +70,8 @@ function _ulConcatMapFilter(@p, @f, @xs) {
 	if (xs === null) { return null; }
 	else             {
         var x = xs(xs);
-		return p(x) ? ulAppendMap(p, f(x), _ulConcatMapFilter(p, f, xs))
-                    :                      _ulConcatMapFilter(p, f, xs);
+		return p(x) ? ulAppend(f(x), _ulConcatMapFilter(p, f, xs))
+                    :                _ulConcatMapFilter(p, f, xs);
 	}
 }
 
@@ -202,7 +207,7 @@ function lSafeCons(@x){
 */
 function ulSafeCons(@x, @xs) {
 	var _x =@ x, _xs =@ xs;
-	return function(@x_, @xs_) {
+	return function(@xs_) {
 	xs_ =@ _xs; return _x;
 };}
 
@@ -251,10 +256,10 @@ function lFromArray(@xs){
 /**
 * lFromKeys : Assoc a b -> List a
 */
-function lFromKeys(@xs){
+function lFromKeys(@xs) {
 	var ret = null;
 	for (var k : var _ in xs) {
-		ret = ulSafeTailCons(k, ret);
+		ret =@ ulSafeCons(k, ret);
 	}
 	return ret;
 }
