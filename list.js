@@ -44,13 +44,6 @@ function lConcat(@xss) {
 	return ulFoldRu(ulAppend, null, xss);
 }
 
-/**
-* lConcatMap : (a -> List b) -> List a -> List b
-*/
-function lConcatMap(@f) { return function(@xs) {
-	return _ulConcatMap(f, @xs);
-};}
-
 function _ulConcatMap(@f, @xs) {
 	return xs === null	? null
 						: _ulAppend(f(xs(xs)), _ulConcatMap(f, xs));
@@ -100,6 +93,49 @@ function _ulAppendFilter(@p, @xs, @acc) {
         var x = xs(xs);
 		return p(x) ? ulCons(x, _ulAppendFilter(p, xs, acc))
                     :           _ulAppendFilter(p, xs, acc);
+	}
+}
+
+function _lLength(@xs) {
+	if (xs === null)	{ return 0; }
+	else				{
+		xs(xs);
+		return 1 + _lLength(xs);
+	}
+}
+
+/**
+* lEmpty : List a -> Bool
+*/
+function lEmpty(@xs) {
+	return xs === null;
+}
+
+/**
+* lRepeat : a -> List a
+*/
+function lRepeat(@x) {
+	var _x =@ x;
+	return function(@xs_) { xs_ =@ lRepeat(_x); return _x; };
+}
+
+/**
+* ulReplicate : (Int, a) -> List a
+*/
+function ulReplicate(@n, @x) {
+	return _ulTake(n, lRepeat(x));
+}
+
+function _ulTake(@n, @xs) {
+	return n === 0 || xs === null	? null
+									: ulCons(xs(xs), _ulTake(n - 1, xs));
+}
+
+function _ulDrop(@n, @xs) {
+	if (n === 0 || xs === null)	{ return xs; }
+	else						{
+		xs(xs);
+		return _ulDrop(n - 1, xs);
 	}
 }
 
@@ -438,4 +474,46 @@ function lApply(@fs) { return function(@xs) {
 */
 function ulApply(@fs, @xs) {
 	return _ulApply(@fs, xs);
+}
+
+/**
+* lConcatMap : (a -> List b) -> List a -> List b
+*/
+function lConcatMap(@f) { return function(@xs) {
+	return _ulConcatMap(f, @xs);
+};}
+
+/**
+* lReplicate : Int -> a -> List a
+*/
+function lReplicate(@n) { return function(x) {
+	return ulReplicate(n, x);
+};}
+
+/**
+* lTake : Int -> List a -> List a
+*/
+function lTake(@n) { return function(xs) {
+	return _ulTake(n, @xs);
+};}
+
+/**
+* ulTake : (Int, List a) -> List a
+*/
+function ulTake(@n, @xs) {
+	return _ulTake(n, @xs);
+}
+
+/**
+* lDrop : Int -> List a -> List a
+*/
+function lDrop(@n) { return function(xs) {
+	return _ulDrop(n, @xs);
+};}
+
+/**
+* ulDrop : (Int, List a) -> List a
+*/
+function ulDrop(@n, @xs) {
+	return _ulDrop(n, @xs);
 }
