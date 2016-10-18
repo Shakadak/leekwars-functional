@@ -26,3 +26,13 @@ function comparing(@f) { return function(@p) { return function(@x) { return func
 function comparingu(@f) { return function(@p) { return function(@x, @y) {
 	return p(f(x), f(y));
 };};}
+
+/**
+* superior : a -> a -> Bool
+*/
+function superior(@x) { return function(@y) { return x >= y; };}
+
+/**
+* stricltySuperior : a -> a -> Bool
+*/
+function strictlySuperior(@x) { return function(@y) { return x > y; };}

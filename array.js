@@ -1,5 +1,6 @@
 include("functional.js");
 include("bool.js");
+include("debug");
 
 
 /**
@@ -60,6 +61,14 @@ function uaAppendFilter(@p, @xs, @ys) {
 */
 function aMap(@f) { return function(@xs) {
 	return arrayFoldLeft(xs, function(@acc, @x){push(acc, f(x)); return acc;}, []);
+};}
+
+/**
+* daMap : (a -> b) -> Array a -> Array b
+*/
+function daMap(@f) { return function(@xs) {
+	arrayFoldLeft(xs, function(@acc, @x){ x =@ f(x); }, null);
+	return xs;
 };}
 
 /**
@@ -156,6 +165,23 @@ function aIter(@f) { return function(@xs) {
 };}
 
 /**
+*
+*/
+function uaTake(n, @xs) {
+	var ret = [];
+	arrayFoldLeft(xs, function(@_, @x){if (n <= 0){ return;} push(ret, x); n--;}, null);
+	/*for (var x in xs) {
+		push(ret, x);
+		if (--n <= 0) { break; }
+	}*/
+	return ret;
+}
+
+function aTake(@n) { return function(@xs) {
+	return uaTake(n, xs);
+};}
+
+/**
 * isEmpty : Array a -> Bool
 */
 function isEmpty(@xs) { return count(xs) === 0; }
@@ -197,4 +223,11 @@ function assocInsert(@k) { return function(@v) { return function(@xs) {
 */
 function assocLookup(@xs) { return function(@k) {
     return xs["" + k];
+};}
+
+/**
+* keysMap : (k -> v) -> Array k -> Assoc k v
+*/
+function keysMap(f) { return function(@ks) {
+	return arrayFoldLeft(ks, function(@acc, @k) { acc[k] = f(k); return acc; }, []);
 };}

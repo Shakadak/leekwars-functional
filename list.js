@@ -139,6 +139,16 @@ function _ulDrop(@n, @xs) {
 	}
 }
 
+function _ulAll(@p, @xs) {
+	return xs === null	? true
+						: p(xs(xs)) || _ulAll(p, xs);
+}
+
+function _ulAny(@p, @xs) {
+	return xs === null	? false
+						: p(xs(xs)) || _ulAny(p, xs);
+}
+
 /**
 * ulIter : ((a -> ()), List a) -> ()
 */
@@ -486,14 +496,14 @@ function lConcatMap(@f) { return function(@xs) {
 /**
 * lReplicate : Int -> a -> List a
 */
-function lReplicate(@n) { return function(x) {
+function lReplicate(@n) { return function(@x) {
 	return ulReplicate(n, x);
 };}
 
 /**
 * lTake : Int -> List a -> List a
 */
-function lTake(@n) { return function(xs) {
+function lTake(@n) { return function(@xs) {
 	return _ulTake(n, @xs);
 };}
 
@@ -507,7 +517,7 @@ function ulTake(@n, @xs) {
 /**
 * lDrop : Int -> List a -> List a
 */
-function lDrop(@n) { return function(xs) {
+function lDrop(@n) { return function(@xs) {
 	return _ulDrop(n, @xs);
 };}
 
@@ -516,4 +526,34 @@ function lDrop(@n) { return function(xs) {
 */
 function ulDrop(@n, @xs) {
 	return _ulDrop(n, @xs);
+}
+
+
+/**
+* lAll : (a -> Bool) -> List a -> Bool
+*/
+function lAll(@p) { return function(@xs) {
+	return _ulAll(p, @xs);
+};}
+
+/**
+* ulAll : ((a -> Bool), List a) -> Bool
+*/
+function ulAll(@p, @xs) {
+	return _ulAll(p, @xs);
+}
+
+
+/**
+* lAny : (a -> Bool) -> List a -> Bool
+*/
+function lAny(@p) { return function(@xs) {
+	return _ulAny(p, @xs);
+};}
+
+/**
+* ulAny : ((a -> Bool), List a) -> Bool
+*/
+function ulAny(@p, @xs) {
+	return _ulAny(p, @xs);
 }

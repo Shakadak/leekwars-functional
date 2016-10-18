@@ -83,3 +83,5 @@ function delay2(@f) {return function(@a, @b) { return function(){ return f(a,b);
 * delay3 : ((a, b, c) -> d) -> (a, b, c) -> () -> d
 */
 function delay3(@f) {return function(@a, @b, @c) { return function(){ return f(a,b,c); };};}
+
+function yield(@f) { return f(); }

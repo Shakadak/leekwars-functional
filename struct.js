@@ -2,7 +2,6 @@
 * WARNING : NOT TESTED YET
 */
 
-
 /**
 * tuple1 : a -> Tuple a // Not really useful
 */
@@ -95,4 +94,10 @@ function utuple4(@x, @y, @z, @u) {
 */
 function ustuple4(@x, @y, @z, @u) { var _x =@ x; var _y =@ y; var _z =@ z; var _u =@ u;
     return function(@x_, @y_, @z_, @u_) { x_ =@ _x; y_ =@ _y; z_ =@ _z; u_ =@ _u; };
+}
+
+function dswap(@x, @y) {
+	var z =@ x;
+	x =@ y;
+	y =@ z;
 }
