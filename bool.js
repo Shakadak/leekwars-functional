@@ -36,3 +36,13 @@ function superior(@x) { return function(@y) { return x >= y; };}
 * stricltySuperior : a -> a -> Bool
 */
 function strictlySuperior(@x) { return function(@y) { return x > y; };}
+
+/**
+* inferior : a -> a -> Bool
+*/
+function inferior(@x) { return function(@y) { return x <= y; };}
+
+/**
+* stricltyInferior : a -> a -> Bool
+*/
+function strictlyInferior(@x) { return function(@y) { return x < y; };}

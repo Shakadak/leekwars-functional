@@ -17,7 +17,7 @@ Although it improves again the performances of other array functions, the fact t
 # Array functions usage
 
 Here are some examples on how to use the array functions.
-```
+```js
 [code]
 var xs = [1, 2, 3];
 var ret = aMap(function(x) {return x + 1;})(xs);
@@ -25,7 +25,7 @@ var ret = aMap(function(x) {return x + 1;})(xs);
 [/code]
 ```
 
-```
+```js
 [code]
 var xs = [1, 2, 3];
 var ret = aFilter(function(x) {return x === 2;})(xs);
@@ -33,7 +33,7 @@ var ret = aFilter(function(x) {return x === 2;})(xs);
 [/code]
 ```
 
-```
+```js
 [code]
 function add(x, y) {return x + y;}
 var xs = [1, 2, 3];
@@ -47,7 +47,7 @@ Important things to understand with foldLeft and foldRight:
 * The consuming function receive the both the accumulator and an element of the array as argument. In the case of foldLeft, the accumulator is on the *left* and in the case of foldRight, the accumulator is on the *right*. In case of doubt, look at the type. `b` is the accumulator, `a` is the consumed. Looking at the type signatures of aFoldRu and aFoldLu may be easier if you are not used to the notation.
 
 Using `add` from `math`:
-```
+```js
 [code]
 var xs = [1, 2, 3];
 var fs = [add(0), add(1), add(100)];
@@ -56,7 +56,7 @@ var ret = aApply(fs)(xs);
 [/code]
 ```
 
-```
+```js
 [code]
 var prepend123 = append([1, 2, 3]); // Equivalent to function(@x) { return [1, 2, 3] + x; }
 var xs = prepend123([2, 3, 4]);
@@ -73,14 +73,14 @@ aIntersection and aRelativeComplement are functions on set.
 
 Beside the functions to construct lists and access elements, convert between list and array, everything else is the same.
 
-```
+```js
 [code]
 var xs = ulCons(1, ulCons(2, lSingleton(3)));
 // xs = (1, (2, (3)))
 [/code]
 ```
 
-```
+```js
 [code]
 var xs = lFromArray([1, 2, 3]);
 var ys = lToArray(xs);
@@ -89,7 +89,7 @@ var ys = lToArray(xs);
 [/code]
 ```
 
-```
+```js
 [code]
 var xs = lFromArray([1, 2]);
 var h = lHead(xs);
@@ -101,7 +101,7 @@ var error = lTail(t);
 [/code]
 ```
 
-```
+```js
 [code]
 var xs = lCons(1)(lSingleton(2));
 var x1, xs1;
