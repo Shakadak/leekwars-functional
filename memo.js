@@ -3,7 +3,7 @@ function memo1(f) {
 	return function(@x) {
 		var ret =@ cache["" + x];
 		return ret !== null	? ret
-							: cache[x] =@ f(x);
+							: cache[x] = f(x);
 	};
 }
 
