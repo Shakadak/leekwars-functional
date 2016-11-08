@@ -141,7 +141,7 @@ function _ulDrop(@n, @xs) {
 
 function _ulAll(@p, @xs) {
 	return xs === null	? true
-						: p(xs(xs)) || _ulAll(p, xs);
+						: p(xs(xs)) && _ulAll(p, xs);
 }
 
 function _ulAny(@p, @xs) {

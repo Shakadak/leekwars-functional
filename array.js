@@ -165,21 +165,48 @@ function aIter(@f) { return function(@xs) {
 };}
 
 /**
-*
+* uaTake : (Int, Array a) -> Array a
 */
 function uaTake(n, @xs) {
 	var ret = [];
 	arrayFoldLeft(xs, function(@_, @x){if (n <= 0){ return;} push(ret, x); n--;}, null);
-	/*for (var x in xs) {
-		push(ret, x);
-		if (--n <= 0) { break; }
-	}*/
 	return ret;
 }
 
+/**
+* aTake : Int -> Array a -> Array a
+*/
 function aTake(@n) { return function(@xs) {
 	return uaTake(n, xs);
 };}
+
+/**
+* uaAny : (a -> Bool, Array a) -> Bool
+*/
+function uaAny(@p, @xs) {
+	return arrayFoldLeft(xs, function(@acc, @x) { return acc || p(x); }, false);
+}
+
+/**
+* aAny : (a -> Bool) -> Array a -> Bool
+*/
+function aAny(@p, @xs) {
+	return arrayFoldLeft(xs, function(@acc, @x) { return acc || p(x); }, false);
+}
+
+/**
+* uaAll : (a -> Bool, Array a) -> Bool
+*/
+function uaAll(@p, @xs) {
+	return arrayFoldLeft(xs, function(@acc, @x) { return acc && p(x); }, true);
+}
+
+/**
+* aAll : (a -> Bool) -> Array a -> Bool
+*/
+function aAll(@p, @xs) {
+	return arrayFoldLeft(xs, function(@acc, @x) { return acc && p(x); }, true);
+}
 
 /**
 * isEmpty : Array a -> Bool
