@@ -1,4 +1,9 @@
 /**
+* not : Bool -> Bool
+*/
+function not(@p) { return !p; }
+
+/**
 * negate : (a -> Bool) -> a -> Bool
 */
 function negate(@p) { return function(@a) {return !p(a); };}
