@@ -190,9 +190,9 @@ function uaAny(@p, @xs) {
 /**
 * aAny : (a -> Bool) -> Array a -> Bool
 */
-function aAny(@p, @xs) {
+function aAny(@p) { return function(@xs) {
 	return arrayFoldLeft(xs, function(@acc, @x) { return acc || p(x); }, false);
-}
+};}
 
 /**
 * uaAll : (a -> Bool, Array a) -> Bool
@@ -204,9 +204,9 @@ function uaAll(@p, @xs) {
 /**
 * aAll : (a -> Bool) -> Array a -> Bool
 */
-function aAll(@p, @xs) {
+function aAll(@p) { return function(@xs) {
 	return arrayFoldLeft(xs, function(@acc, @x) { return acc && p(x); }, true);
-}
+};}
 
 /**
 * isEmpty : Array a -> Bool
