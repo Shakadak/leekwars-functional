@@ -102,8 +102,8 @@ function aConcatMap(@f) { return function(@xs) {
 function aConcatFilterMap(@f) { return function(@p) { return function(@xs) {
 	var ret = [];
 	arrayFoldLeft(xs
-				, function(@_, x){arrayFoldLeft(f(x), function(@__, @y){if(p(y)){push(ret, y);}},null);}
-				, null);
+				, function(@_, @x){arrayFoldLeft(f(x), function(@__, @y){if(p(y)){push(ret, y);} return __;},f); return _;}
+				, f);
 	return ret;
 };};}
 
