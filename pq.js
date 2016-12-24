@@ -1,5 +1,4 @@
 include("struct.js");
-include("bool.js");
 
 function ppair(@p, @v) {
 	return function(@p_) { p_ =@ p; return v;};
@@ -44,8 +43,8 @@ function siftUp(@xs) {
 }
 
 function siftDown(@xs) {
-	var s = count(xs);
 	var sift = function(p) {
+		var s = count(xs);
 		var c, cp;
 		var l = (p << 1) + 1, r = l + 1;
 		if (r >= s) {
@@ -72,3 +71,16 @@ function siftDown(@xs) {
 	};
 	return sift;
 }
+
+function pqTake(@xs) { return function(@n) {
+	var ret = [];
+	while (n > 0 && count(xs) > 0) {
+		push(ret, shift(xs));
+		if (count(xs) > 0) {
+			unshift(xs, pop(xs));
+			siftDown(xs)(0);
+		}
+		n--;
+	}
+	return ret;
+};}

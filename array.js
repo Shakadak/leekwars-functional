@@ -67,7 +67,7 @@ function aMap(@f) { return function(@xs) {
 * daMap : (a -> b) -> Array a -> Array b
 */
 function daMap(@f) { return function(@xs) {
-	arrayFoldLeft(xs, function(@acc, @x){ x =@ f(x); }, null);
+	arrayFoldLeft(xs, function(@acc, @x){ x =@ f(x); return acc; }, f);
 	return xs;
 };}
 
@@ -97,7 +97,7 @@ function aConcatMap(@f) { return function(@xs) {
 };}
 
 /**
-*
+* aConcatFilterMap : (a -> Array b) -> (b -> Bool) -> Array a -> Array b
 */
 function aConcatFilterMap(@f) { return function(@p) { return function(@xs) {
 	var ret = [];
@@ -105,6 +105,27 @@ function aConcatFilterMap(@f) { return function(@p) { return function(@xs) {
 				, function(@_, @x){arrayFoldLeft(f(x), function(@__, @y){if(p(y)){push(ret, y);} return __;},f); return _;}
 				, f);
 	return ret;
+};};}
+
+/**
+* aFilterMap : (a -> b) -> (b -> Bool) -> Array a -> Array b
+*/
+function aFilterMap(@f) { return function(@p) { return function(@xs) {
+	return arrayFoldLeft(xs
+				, function(@acc, x){
+						var y =@ f(x);
+						if (p(y)) { push(acc, y); }
+						return acc; }
+				, []);
+};};}
+
+/**
+* aMapFilter : (a -> Bool) -> (a -> b) -> Array a -> Array b
+*/
+function aMapFilter(@p) { return function(@f) { return function(@xs) {
+	return arrayFoldLeft(xs
+				, function(@acc, x){ if (p(x)) { push(acc, f(x)); return acc; };}
+				, []);
 };};}
 
 /**
@@ -130,7 +151,7 @@ function aAppend(@xs) {return function(@ys) {
 function aApply(@fs) { return function(@xs) {
 	var ret = [];
 	arrayFoldLeft(fs
-				, function(@_, @f){ arrayFoldLeft(xs, function(@__, @x){push(ret, f(x));}, null);}
+				, function(@_, @f){ return arrayFoldLeft(xs, function(@__, @x){ push(ret, f(x)); return __; }, _); }
 				, null);
 	return ret;
 };}
@@ -168,9 +189,7 @@ function aIter(@f) { return function(@xs) {
 * uaTake : (Int, Array a) -> Array a
 */
 function uaTake(n, @xs) {
-	var ret = [];
-	arrayFoldLeft(xs, function(@_, @x){if (n <= 0){ return;} push(ret, x); n--;}, null);
-	return ret;
+	return arrayFoldLeft(xs, function(@acc, @x){if (n <= 0){ return acc;} push(acc, x); n--; return acc;}, []);
 }
 
 /**
@@ -258,3 +277,24 @@ function assocLookup(@xs) { return function(@k) {
 function keysMap(f) { return function(@ks) {
 	return arrayFoldLeft(ks, function(@acc, @k) { acc[k] = f(k); return acc; }, []);
 };}
+
+/**
+* kvsFromMap : (v -> k) -> Array v -> Assoc k v
+*/
+function kvsFromMap(f) { return function(@vs) {
+	return arrayFoldLeft(vs, function(@acc, @v) { acc[f(v)] = v; return acc; }, []);
+};}
+
+/**
+* access : k -> Assoc k v -> v
+*/
+function access(@k) { return function(@kvs) { return kvs[k]; };}
+
+/**
+* lookup : Assoc k v -> k -> v
+*/
+function lookup(@kvs) { return function(@k) { return kvs[k]; };}
+
+function cloneAt(@xs, @out) {
+	return out += xs;
+}

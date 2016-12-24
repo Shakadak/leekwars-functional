@@ -51,3 +51,10 @@ function inferior(@x) { return function(@y) { return x <= y; };}
 * stricltyInferior : a -> a -> Bool
 */
 function strictlyInferior(@x) { return function(@y) { return x < y; };}
+
+/**
+* bool : (a - False) -> (a - True) -> Bool -> a
+*/
+function bool(@x) { return function(@y) { return function(@b) {
+	return b ? y : x;
+};};}

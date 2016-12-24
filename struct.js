@@ -69,6 +69,13 @@ function ustuple3(@x, @y, @z) { var _x =@ x; var _y =@ y; var _z =@ z;
 }
 
 /**
+* uctuple3 : (a, b, c) -> Tuple a b c
+*/
+function uctuple3(_x, _y, _z) {
+    return function(@x_, @y_, @z_) { x_ =@ _x; y_ =@ _y; z_ =@ _z; };
+}
+
+/**
 * tuple4 : a -> b -> c -> d -> Tuple a b c d
 */
 function tuple4(@x) { return function(@y){ return function(@z){ return function(@u){
@@ -93,6 +100,13 @@ function utuple4(@x, @y, @z, @u) {
 * ustuple4 : (a, b, c, d) -> Tuple a b c d
 */
 function ustuple4(@x, @y, @z, @u) { var _x =@ x; var _y =@ y; var _z =@ z; var _u =@ u;
+    return function(@x_, @y_, @z_, @u_) { x_ =@ _x; y_ =@ _y; z_ =@ _z; u_ =@ _u; };
+}
+
+/**
+* uctuple4 : (a, b, c, d) -> Tuple a b c d
+*/
+function uctuple4(@x, @y, @z, @u) { var _x = x; var _y = y; var _z = z; var _u = u;
     return function(@x_, @y_, @z_, @u_) { x_ =@ _x; y_ =@ _y; z_ =@ _z; u_ =@ _u; };
 }
 
