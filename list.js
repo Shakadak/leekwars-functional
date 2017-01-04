@@ -49,14 +49,14 @@ function _ulConcatMap(@f, @xs) {
 						: _ulAppend(f(xs(xs)), _ulConcatMap(f, xs));
 }
 
-function _ulConcatFilter(@p, @xss) {
+function _ulFilterConcat(@p, @xss) {
 	return xss === null	? null
-						: ulAppendFilter(p, xss(xss), _ulConcatFilter(p, xss));
+						: ulAppendFilter(p, xss(xss), _ulFilterConcat(p, xss));
 }
 
-function _ulConcatFilterMap(@f, @p, @xs) {
+function _ulFilterConcatMap(@f, @p, @xs) {
 	return xs === null	? null
-						: _ulAppendFilter(p, @f(xs(xs)), _ulConcatFilterMap(f, p, xs));
+						: _ulAppendFilter(p, @f(xs(xs)), _ulFilterConcatMap(f, p, xs));
 }
 
 function _ulConcatMapFilter(@p, @f, @xs) {
@@ -396,24 +396,24 @@ function ulAppendMap(@f, @xs, @acc) {
 }
 
 /**
-* ulConcatFilter : ((a -> Bool), List (List a)) -> List a
+* ulFilterConcat : ((a -> Bool), List (List a)) -> List a
 */
-function ulConcatFilter(@p, @xss) {
-	return _ulConcatFilter(p, @xss);
+function ulFilterConcat(@p, @xss) {
+	return _ulFilterConcat(p, @xss);
 }
 
 /**
 * lConcatFilterMap : (a -> List b) -> (b -> Bool) -> List a -> List b
 */
-function lConcatFilterMap(@f) { return function(@p) { return function(@xs) {
-return _ulConcatFilterMap(f, p, @xs);
+function lFilterConcatMap(@f) { return function(@p) { return function(@xs) {
+return _ulFilterConcatMap(f, p, @xs);
 };};}
 
 /**
 * ulConcatFilterMap : ((a -> List b), (b -> Bool), List a) -> List b
 */
-function ulConcatFilterMap(@f, @p, @xs) {
-	return _ulConcatFilterMap(f, p, @xs);
+function ulFilterConcatMap(@f, @p, @xs) {
+	return _ulFilterConcatMap(f, p, @xs);
 }
 
 /**

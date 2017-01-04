@@ -99,7 +99,7 @@ function aConcatMap(@f) { return function(@xs) {
 /**
 * aConcatFilterMap : (a -> Array b) -> (b -> Bool) -> Array a -> Array b
 */
-function aConcatFilterMap(@f) { return function(@p) { return function(@xs) {
+function aFilterConcatMap(@f) { return function(@p) { return function(@xs) {
 	var ret = [];
 	arrayFoldLeft(xs
 				, function(@_, @x){arrayFoldLeft(f(x), function(@__, @y){if(p(y)){push(ret, y);} return __;},f); return _;}
