@@ -124,7 +124,7 @@ function aFilterMap(@f) { return function(@p) { return function(@xs) {
 */
 function aMapFilter(@p) { return function(@f) { return function(@xs) {
 	return arrayFoldLeft(xs
-				, function(@acc, x){ if (p(x)) { push(acc, f(x)); return acc; };}
+				, function(@acc, x){ if (p(x)) { push(acc, f(x)); } return acc; }
 				, []);
 };};}
 
