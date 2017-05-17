@@ -19,7 +19,7 @@ function ulFoldLu(@f, @acc, @xs) {
 */
 function ulFoldR(@f, @acc, @xs) {
 	return xs == null	? acc
-						: xs(function(@h, @t) { return f(h)(ulFoldLu(f, acc, t)); });
+						: xs(function(@h, @t) { return f(h)(ulFoldR(f, acc, t)); });
 }
 
 /**
@@ -27,7 +27,7 @@ function ulFoldR(@f, @acc, @xs) {
 */
 function ulFoldRu(@f, @acc, @xs) {
 	return xs == null	? acc
-						: xs(function(@h, @t) { return f(h, ulFoldLu(f, acc, t)); });
+						: xs(function(@h, @t) { return f(h, ulFoldRu(f, acc, t)); });
 }
 
 // function ulFoldRu(@f, @acc, @xs) {
@@ -198,7 +198,7 @@ function ulIter(@f, @xs) {
 	var _xs =@ xs;
 	var fn = function(@h, @t) { f(h); _xs =@ t; };
 	while (_xs !== null) {
-		f(_xs);
+		_xs(fn);
 	}
 }
 
