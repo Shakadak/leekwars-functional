@@ -83,7 +83,7 @@ function ulConcatMap(@f, @xs) {
 */
 function ulFilterConcat(@p, @xss) {
 	return xss === null	? null
-						: xs(function(@h, @t) { return ulAppendFilter(p, h, ulFilterConcat(p, t)); });
+						: xss(function(@h, @t) { return ulAppendFilter(p, h, ulFilterConcat(p, t)); });
 }
 
 /**
@@ -116,8 +116,8 @@ function ulApply(@fs, @xs) {
 */
 function ulFilter(@p, @xs) {
 	return xs == null   ? null
-                        : xs(function(@h, @t) { return p(x) ? ulCons(x, _ulFilter(p, xs))
-                                                            : _ulFilter(p, xs); });
+                        : xs(function(@h, @t) { return p(h) ? ulCons(h, ulFilter(p, t))
+                                                            : ulFilter(p, t); });
 }
 
 /**
