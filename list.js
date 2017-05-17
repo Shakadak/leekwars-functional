@@ -1,12 +1,3 @@
-/*
-   WARNING: THIS WORKS AS EXPECTED ONLY IN THE CONTEXT OF NO MUTATION
-   var x = 1;
-   var xs = lSingleton(x); // xs = (1);
-   x = 2; // xs = (2);
-   If you are fine with this behavior, then go ahead, the gain in term of construction is pretty significant. (2op per element.) Otherwise, use the others constructors (lSafe[Tail]Cons and ulSafe[Tail]Cons) when constructing by hand.
-   You can even go and dirty your hand by direclty defining an anonymous function: `function(@xs_) {xs_ =@ list; return value;}` value and list being provided by yourself.
-*/
-
 function _ulFoldL(@f, @acc, @xs) {
 	return xs === null	? acc
 						: _ulFoldL(f, f(acc)(xs(xs)), xs);
@@ -403,14 +394,14 @@ function ulFilterConcat(@p, @xss) {
 }
 
 /**
-* lConcatFilterMap : (a -> List b) -> (b -> Bool) -> List a -> List b
+* lFilterConcatMap : (a -> List b) -> (b -> Bool) -> List a -> List b
 */
 function lFilterConcatMap(@f) { return function(@p) { return function(@xs) {
 return _ulFilterConcatMap(f, p, @xs);
 };};}
 
 /**
-* ulConcatFilterMap : ((a -> List b), (b -> Bool), List a) -> List b
+* ulFilterConcatMap : ((a -> List b), (b -> Bool), List a) -> List b
 */
 function ulFilterConcatMap(@f, @p, @xs) {
 	return _ulFilterConcatMap(f, p, @xs);

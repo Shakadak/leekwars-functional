@@ -20,3 +20,8 @@ function defaultDiv(@default) { return function(@x) { return function(@y) {
 * sigmoid : Num a => a -> a
 */
 function sigmoid(@x) { return 1 / (1 + exp(-x)); }
+
+/**
+* tanh : Num a => a -> a
+*/
+function tanh(x){ var a = exp(2 * x); return (a - 1) / (a + 1); }

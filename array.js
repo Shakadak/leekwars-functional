@@ -295,6 +295,16 @@ function access(@k) { return function(@kvs) { return kvs[k]; };}
 */
 function lookup(@kvs) { return function(@k) { return kvs[k]; };}
 
+/**
+* cyclicAccess : Num k => k -> Assoc k v -> v
+*/
+function cyclicAccess(@k) { return function(@kvs) { return kvs[k % count(kvs)]; };}
+
+/**
+* cyclicLookup : Num k => Assoc k v -> k -> v
+*/
+function cyclicLookup(@kvs) { return function(@k) { return kvs[k % count(kvs)]; };}
+
 function cloneAt(@xs, @out) {
 	return out += xs;
 }
