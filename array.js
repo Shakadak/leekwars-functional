@@ -241,7 +241,7 @@ function isNonEmpty(@xs) { return count(xs) !== 0; }
 /**
 * getKeys : Assoc a b -> Array a
 */
-function getKeys(xs) {
+function getKeys(@xs) {
     var ks = [];
     for (var k : var x in xs) {
         push(ks, k);
